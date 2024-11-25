@@ -47,6 +47,8 @@ API: Youtube Data API
 Use Case: Users will upload youtube video links to share with other users. The idea is to easily share media with others in a more social media format. Rather than being shown videos that the youtube algorithm suggests that you will like. Share videos with friends in one place without cluttering group chats. Users will also be able to like / dislike users posted videos and comment on the posts as well to engage in conversations about the shared content as well as flag content or comments for review. 
 Admin Case: Users with admin privileges will be able to remove comments and posts to prevent harmful content as well as disable users accounts for repeated harassment. 
 
+URI: postgresql://postgres:{$POSTGRES_PORT}@{$POSTGRES_DBNAME}:{$POSTGRES_PORT}/{$POSTGRES_USERNAME}
+
 tables:
 create table users (
   u_id int not null,
