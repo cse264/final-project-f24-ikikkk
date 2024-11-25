@@ -28,3 +28,57 @@ Build your team and write a document describing your application to me by Monday
 * README describing your project, with all the information outlined above (team members, application name, description, etc). You will also include detailed instructions of how to install and run your application, and what API keys, databases, etc are needed to run your application.
 * Final Presentation and Demo
   * You will prepare a 5 minute presentation and demo of your application in class during the last week of classes
+
+
+Application Name : Your ‘tube 
+
+Team Members and Roles (Roles may change throughout the project):
+Stone Killen - Front-end
+Allen Lee - Backend/Admin
+Edwin Chang - Front-end
+Lisa Huang - Backend/Admin
+
+User roles: User and Admin accounts 
+Database: Trembo
+UI : Like, dislike, comment, add video post
+Library / framework: Google API Client library, scrollreveal.js 
+API: Youtube Data API
+
+Use Case: Users will upload youtube video links to share with other users. The idea is to easily share media with others in a more social media format. Rather than being shown videos that the youtube algorithm suggests that you will like. Share videos with friends in one place without cluttering group chats. Users will also be able to like / dislike users posted videos and comment on the posts as well to engage in conversations about the shared content as well as flag content or comments for review. 
+Admin Case: Users with admin privileges will be able to remove comments and posts to prevent harmful content as well as disable users accounts for repeated harassment. 
+
+tables:
+create table users (
+  u_id int not null,
+  f_name varchar(255),
+  l_name varchar(255),
+  is_admin boolean,
+  primary key (u_id)
+)
+
+create table posts (
+  p_id int not null,
+  u_id int,
+  title varchar(255),
+  body varchar(255),
+  likes int,
+  dislikes int,
+  primary key (p_id),
+  foreign key(u_id)
+  references users(u_id)
+)
+
+create table comments (
+  c_id int not null,
+  u_id int,
+  p_id int,
+  title varchar(255),
+  body varchar(255),
+  likes int,
+  dislikes int,
+  primary key (c_id),
+  foreign key(u_id)
+  references users(u_id),
+  foreign key(p_id)
+  references posts(p_id)
+)
