@@ -57,6 +57,7 @@ starting page will welcome the user and have a dropdown for the user to select t
 URI: postgresql://postgres:{$POSTGRES_PORT}@{$POSTGRES_DBNAME}:{$POSTGRES_PORT}/{$POSTGRES_USERNAME}
 
 tables:
+```
 create table users (
   u_id int not null,
   f_name varchar(255),
@@ -81,7 +82,6 @@ create table comments (
   c_id int not null,
   u_id int,
   p_id int,
-  title varchar(255),
   body varchar(255),
   likes int,
   dislikes int,
@@ -91,3 +91,39 @@ create table comments (
   foreign key(p_id)
   references posts(p_id)
 )
+```
+
+Default added values:
+users:
+```
+[{"u_id":1,"f_name":"Mustang","l_name":"John","is_admin":false},
+{"u_id":2,"f_name":"John","l_name":"Phillips","is_admin":true},
+{"u_id":3,"f_name":"Katusha","l_name":"Vasilischev","is_admin":true},
+{"u_id":4,"f_name":"Hal","l_name":"Gloster","is_admin":false},
+{"u_id":5,"f_name":"Henry","l_name":"Schumacher","is_admin":false}]
+```
+
+posts:
+```
+[{"p_id":1,"u_id":1,"title":"https://www.youtube.com/watch?v=jfKfPfyJRdk","body":"A classic","likes":20,"dislikes":2},
+{"p_id":2,"u_id":1,"title":"https://www.youtube.com/watch?v=TyUA1OmXMXA","body":"Learned a lot","likes":100,"dislikes":4},
+{"p_id":3,"u_id":4,"title":"https://www.youtube.com/watch?v=ZAqIoDhornk","body":"Physics!!!!","likes":1,"dislikes":0},
+{"p_id":4,"u_id":2,"title":"https://www.youtube.com/watch?v=vr5dCRHAgb0","body":"sooo relaxing","likes":20,"dislikes":2},
+{"p_id":5,"u_id":5,"title":"https://www.youtube.com/watch?v=xvFZjo5PgG0","body":"It is soooo good!!","likes":2,"dislikes":20},
+{"p_id":6,"u_id":5,"title":"https://www.youtube.com/watch?v=xvFZjo5PgG0","body":"It is soooo good!!!!!!","likes":2,"dislikes":100}]
+```
+
+comments:
+```
+INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
+VALUES (1, 2, 1, 'I AGREE!!!',  100, 1);
+
+INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
+VALUES (2, 5, 1, 'I Watch This Like Everyday!!!', 500, 10);
+
+INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
+VALUES (3, 1, 6, 'Please remove for spamming', 200, 0);
+
+INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
+VALUES (4, 1, 6, 'AHHHHHHH', 100, 1);
+```
