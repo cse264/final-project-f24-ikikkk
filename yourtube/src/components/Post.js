@@ -29,7 +29,6 @@ const Post = ({videoLink, body, name, likes, dislikes, comments}) => {
             <h4>Likes: {likes}   Dislikes: {dislikes}</h4>
             <h3>Comments: </h3>
             {comments.map(e => {
-                {console.log(e)}
                 <div>
                     <h4>{e.u_id}: {e.body}</h4>
                     <h5>Likes: {e.likes}   Dislikes: {e.dislikes}</h5>
