@@ -115,15 +115,8 @@ posts:
 
 comments:
 ```
-INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
-VALUES (1, 2, 1, 'I AGREE!!!',  100, 1);
-
-INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
-VALUES (2, 5, 1, 'I Watch This Like Everyday!!!', 500, 10);
-
-INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
-VALUES (3, 1, 6, 'Please remove for spamming', 200, 0);
-
-INSERT INTO comments ( c_id, u_id, p_id, body, likes, dislikes)
-VALUES (4, 1, 6, 'AHHHHHHH', 100, 1);
+[{"c_id":1,"u_id":2,"p_id":1,"body":"I AGREE!!!","likes":100,"dislikes":1},
+{"c_id":2,"u_id":5,"p_id":1,"body":"I Watch This Like Everyday!!!","likes":500,"dislikes":10},
+{"c_id":3,"u_id":1,"p_id":6,"body":"Please remove for spamming","likes":200,"dislikes":0},
+{"c_id":4,"u_id":1,"p_id":6,"body":"AHHHHHHH","likes":100,"dislikes":1}]
 ```
