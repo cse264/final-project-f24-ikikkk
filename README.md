@@ -74,8 +74,6 @@ create table posts (
   likes int,
   dislikes int,
   primary key (p_id),
-  foreign key(u_id)
-  references users(u_id)
 )
 
 create table comments (
@@ -86,10 +84,6 @@ create table comments (
   likes int,
   dislikes int,
   primary key (c_id),
-  foreign key(u_id)
-  references users(u_id),
-  foreign key(p_id)
-  references posts(p_id)
 )
 ```
 
