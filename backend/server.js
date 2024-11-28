@@ -49,17 +49,17 @@ app.get('/api/users/:u_id', async (req, res) => {
         WHERE users.u_id = ${paramId}`;
         query(qs2).then(data => {
         const userData = {
-            UserID: data.rows[0].u_id,
-            FirstName: data.rows[0].p_title,
-            LastName: data.rows[0].p_body,
-            Posts: data.rows
+            u_id: data.rows[0].u_id,
+            f_name: data.rows[0].f_name,
+            l_name: data.rows[0].l_name,
+            posts: data.rows
             .filter(row => row.p_id)
             .map(row => ({
-                CommentsID: row.p_id,
-                Title: row.p_title,
-                Body: row.p_body,
-                Likes: data.rows[0].p_likes,
-                Dislikes: data.rows[0].p_dislikes,
+                p_id: row.p_id,
+                title: row.p_title,
+                body: row.p_body,
+                likes: data.rows[0].p_likes,
+                dislikes: data.rows[0].p_dislikes,
             }))
         };
         res.json(userData);
@@ -85,6 +85,7 @@ app.get('/api/posts/:p_id', async (req, res) => {
         posts.likes as p_likes,
         posts.dislikes as p_dislikes,
         comments.c_id AS c_id,
+        comments.u_id AS u_id,
         comments.body AS c_text,
         comments.likes as c_likes,
         comments.dislikes as c_dislikes
@@ -93,18 +94,19 @@ app.get('/api/posts/:p_id', async (req, res) => {
         WHERE posts.p_id = ${paramId}`;
         query(qs2).then(data => {
           const postData = {
-            PostID: data.rows[0].p_id,
-            Title: data.rows[0].p_title,
-            Body: data.rows[0].p_body,
-            Likes: data.rows[0].p_likes,
-            Dislikes: data.rows[0].p_dislikes,
-            Comments: data.rows
+            p_id: data.rows[0].p_id,
+            title: data.rows[0].p_title,
+            body: data.rows[0].p_body,
+            likes: data.rows[0].p_likes,
+            dislikes: data.rows[0].p_dislikes,
+            comments: data.rows
             .filter(row => row.c_id)
             .map(row => ({
-              CommentsID: row.c_id,
-              Body: row.c_text,
-              Likes: data.rows[0].c_likes,
-              Dislikes: data.rows[0].c_dislikes,
+              c_id: row.c_id,
+              u_id: row.u_id,
+              body: row.c_text,
+              likes: data.rows[0].c_likes,
+              dislikes: data.rows[0].c_dislikes,
             }))
           };
           res.json(postData);
