@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.get('/api/users', (req, res) => {
+app.get('/users', (req, res) => {
     try {
         let qs = `SELECT * FROM users`;
         query(qs).then(data => res.json(data.rows));
@@ -18,7 +18,7 @@ app.get('/api/users', (req, res) => {
     }
 });
 
-app.get('/api/posts', (req, res) => {
+app.get('/posts', (req, res) => {
     try {
         let qs = `SELECT * FROM posts`;
         query(qs).then(data => res.json(data.rows));
@@ -27,7 +27,7 @@ app.get('/api/posts', (req, res) => {
     }
 });
 
-app.get('/api/users/:u_id', async (req, res) => {
+app.get('/users/:u_id', async (req, res) => {
     try {
     const paramId = req.params.u_id;
     let qs1 = `SELECT * FROM users WHERE u_id = ${paramId}`;
@@ -70,7 +70,7 @@ app.get('/api/users/:u_id', async (req, res) => {
     }
 });
 
-app.get('/api/posts/:p_id', async (req, res) => {
+app.get('/posts/:p_id', async (req, res) => {
     try {
       const paramId = req.params.p_id;
       let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId}`;
@@ -117,7 +117,7 @@ app.get('/api/posts/:p_id', async (req, res) => {
     }
   });
 
-  app.post('/api/users/:u_id/posts', async (req, res) => {
+  app.post('/users/:u_id/posts', async (req, res) => {
     try {
       const newPost = req.body; 
       const paramId = req.params.u_id;
@@ -140,7 +140,7 @@ app.get('/api/posts/:p_id', async (req, res) => {
     }
   });
 
-  app.post('/api/users/:u_id/posts/:p_id/comments', async (req, res) => {
+  app.post('/users/:u_id/posts/:p_id/comments', async (req, res) => {
     try {
       const newComment = req.body; 
       const paramId = req.params;
@@ -169,7 +169,7 @@ app.get('/api/posts/:p_id', async (req, res) => {
     }
   });
 
-  app.delete('/api/posts/:p_id', async (req, res) => {
+  app.delete('/posts/:p_id', async (req, res) => {
     try {
       const paramId = req.params.p_id;
       let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId}`;
@@ -193,7 +193,7 @@ app.get('/api/posts/:p_id', async (req, res) => {
       console.error("Something went wrong: " + err);
     }
   });
-  app.delete('/api/posts/:p_id/comments/c_id', async (req, res) => {
+  app.delete('/posts/:p_id/comments/c_id', async (req, res) => {
     try {
       const paramId = req.params;
       let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId.p_id}`;
@@ -208,6 +208,44 @@ app.get('/api/posts/:p_id', async (req, res) => {
           }
           let qs3 = `DELETE FROM comments WHERE c_id = ${paramId.c_id}`;
           query(qs3).then(() => res.json({ message: "Comment deleted successfully" }));
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/like', async (req, res) => {
+    try {
+      const paramId = req.params.p_id;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT likes FROM posts WHERE p_id = ${paramId}`;
+        query(qs2).then(likeAmt => {
+          let qs3 = `UPDATE posts SET likes = ${likeAmt.rows[0].likes + 1} WHERE p_id = ${paramId}`;
+          query(qs3).then(() => res.json({ message: "Like added successfully" }));
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/dislike', async (req, res) => {
+    try {
+      const paramId = req.params.p_id;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT dislikes FROM posts WHERE p_id = ${paramId}`;
+        query(qs2).then(dislikeAmt => {
+          let qs3 = `UPDATE posts SET dislikes = ${dislikeAmt.rows[0].dislikes + 1} WHERE p_id = ${paramId}`;
+          query(qs3).then(() => res.json({ message: "Dislike added successfully" }));
         });
       });
     } catch (err) {

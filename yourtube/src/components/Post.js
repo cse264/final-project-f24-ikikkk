@@ -13,7 +13,7 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        axios.get('http://localhost:' + PORT + '/api/posts/' + p_id)
+        axios.get('http://localhost:' + PORT + '/posts/' + p_id)
           .then(response => {
             setComments(response.data.comments);
             console.log(response.data);

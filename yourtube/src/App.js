@@ -11,7 +11,7 @@ export default function App() {
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:' + PORT + '/api/posts')
+    axios.get('http://localhost:' + PORT + '/posts')
       .then(response => {
         setPosts(response.data);
       })
@@ -19,7 +19,7 @@ export default function App() {
         setError(err.message);
         console.log(error);
       });
-    axios.get('http://localhost:' + PORT + '/api/users')
+    axios.get('http://localhost:' + PORT + '/users')
       .then(response => {
         setUsers(response.data);
       })
@@ -31,7 +31,7 @@ export default function App() {
 
   function onRefresh(){
     setRefreshing(true);
-    axios.get('http://localhost:' + PORT + '/api/users')
+    axios.get('http://localhost:' + PORT + '/users')
       .then(response => {
         setPosts(response.data);
         setRefreshing(false);
