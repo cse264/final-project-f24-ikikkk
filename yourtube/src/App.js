@@ -53,6 +53,18 @@ export default function App() {
         setRefreshing(false);
       });
   };
+  const handleLogin = (user) => {
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedInUser');
+    setCurrentUser(null);
+  }
+  if (!currentUser) {
+    return <Login onLogin={handleLogin} />;
+  }  
 
   return (
     <div style={styles.container}>
