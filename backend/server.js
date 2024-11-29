@@ -58,8 +58,8 @@ app.get('/users/:u_id', async (req, res) => {
                 p_id: row.p_id,
                 title: row.p_title,
                 body: row.p_body,
-                likes: data.rows[0].p_likes,
-                dislikes: data.rows[0].p_dislikes,
+                likes: row.p_likes,
+                dislikes: row.p_dislikes,
             }))
         };
         res.json(userData);
@@ -105,8 +105,8 @@ app.get('/posts/:p_id', async (req, res) => {
               c_id: row.c_id,
               u_id: row.u_id,
               body: row.c_text,
-              likes: data.rows[0].c_likes,
-              dislikes: data.rows[0].c_dislikes,
+              likes: row.c_likes,
+              dislikes: row.c_dislikes,
             }))
           };
           res.json(postData);
@@ -246,6 +246,144 @@ app.get('/posts/:p_id', async (req, res) => {
         query(qs2).then(dislikeAmt => {
           let qs3 = `UPDATE posts SET dislikes = ${dislikeAmt.rows[0].dislikes + 1} WHERE p_id = ${paramId}`;
           query(qs3).then(() => res.json({ message: "Dislike added successfully" }));
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/unlike', async (req, res) => {
+    try {
+      const paramId = req.params.p_id;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT likes FROM posts WHERE p_id = ${paramId}`;
+        query(qs2).then(likeAmt => {
+          let qs3 = `UPDATE posts SET likes = ${likeAmt.rows[0].likes - 1} WHERE p_id = ${paramId}`;
+          query(qs3).then(() => res.json({ message: "Like removed successfully" }));
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/undislike', async (req, res) => {
+    try {
+      const paramId = req.params.p_id;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT dislikes FROM posts WHERE p_id = ${paramId}`;
+        query(qs2).then(dislikeAmt => {
+          let qs3 = `UPDATE posts SET dislikes = ${dislikeAmt.rows[0].dislikes - 1} WHERE p_id = ${paramId}`;
+          query(qs3).then(() => res.json({ message: "Dislike removed successfully" }));
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/comments/:c_id/like', async (req, res) => {
+    try {
+      const paramId = req.params;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId.p_id}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT * FROM comments WHERE c_id = ${paramId.c_id}`;
+        query(qs2).then(data => {
+          if (data.rows.length === 0) { 
+            return res.status(404).send("Comment not found");
+          }
+          let qs3 = `SELECT likes FROM comments WHERE c_id = ${paramId.c_id}`;
+          query(qs3).then(likeAmt => {
+            let qs4 = `UPDATE comments SET likes = ${likeAmt.rows[0].likes + 1} WHERE c_id = ${paramId.c_id}`;
+            query(qs4).then(() => res.json({ message: "Like added successfully" }));
+          });
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/comments/:c_id/dislike', async (req, res) => {
+    try {
+      const paramId = req.params;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId.p_id}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT * FROM comments WHERE c_id = ${paramId.c_id}`;
+        query(qs2).then(data => {
+          if (data.rows.length === 0) { 
+            return res.status(404).send("Comment not found");
+          }
+          let qs3 = `SELECT dislikes FROM comments WHERE c_id = ${paramId.c_id}`;
+          query(qs3).then(dislikeAmt => {
+            let qs4 = `UPDATE comments SET dislikes = ${dislikeAmt.rows[0].dislikes + 1} WHERE c_id = ${paramId.c_id}`;
+            query(qs4).then(() => res.json({ message: "Disike added successfully" }));
+          });
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/comments/:c_id/unlike', async (req, res) => {
+    try {
+      const paramId = req.params;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId.p_id}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT * FROM comments WHERE c_id = ${paramId.c_id}`;
+        query(qs2).then(data => {
+          if (data.rows.length === 0) { 
+            return res.status(404).send("Comment not found");
+          }
+          let qs3 = `SELECT likes FROM comments WHERE c_id = ${paramId.c_id}`;
+          query(qs3).then(likeAmt => {
+            let qs4 = `UPDATE comments SET likes = ${likeAmt.rows[0].likes - 1} WHERE c_id = ${paramId.c_id}`;
+            query(qs4).then(() => res.json({ message: "Like removed successfully" }));
+          });
+        });
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
+  app.put('/posts/:p_id/comments/:c_id/undislike', async (req, res) => {
+    try {
+      const paramId = req.params;
+      let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId.p_id}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("Post not found");
+        }
+        let qs2 = `SELECT * FROM comments WHERE c_id = ${paramId.c_id}`;
+        query(qs2).then(data => {
+          if (data.rows.length === 0) { 
+            return res.status(404).send("Comment not found");
+          }
+          let qs3 = `SELECT dislikes FROM comments WHERE c_id = ${paramId.c_id}`;
+          query(qs3).then(dislikeAmt => {
+            let qs4 = `UPDATE comments SET dislikes = ${dislikeAmt.rows[0].dislikes - 1} WHERE c_id = ${paramId.c_id}`;
+            query(qs4).then(() => res.json({ message: "Disike removed successfully" }));
+          });
         });
       });
     } catch (err) {
