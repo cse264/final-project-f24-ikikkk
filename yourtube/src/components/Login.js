@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './login.css';
+import axios from 'axios';
 
+const PORT = '5000';
 const Login = ({ onLogin }) => {
   const [isAdmin, setIsAdmin] = useState(false); // Tracks if Admin login is selected
   const [selectedUser, setSelectedUser] = useState(null); // Tracks selected user
-
-  const users = [
-    { u_id: 1, f_name: "Mustang", l_name: "John", is_admin: false },
-    { u_id: 2, f_name: "John", l_name: "Phillips", is_admin: true },
-    { u_id: 3, f_name: "Katusha", l_name: "Vasilischev", is_admin: true },
-    { u_id: 4, f_name: "Hal", l_name: "Gloster", is_admin: false },
-    { u_id: 5, f_name: "Henry", l_name: "Schumacher", is_admin: false },
-  ];
+  const [users, setUsers] = useState([]); // State to store user data
+ 
+  useEffect(() => {
+    axios
+      .get('http://localhost:' + PORT + '/users')
+      .then((response) => {
+        setUsers(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
 
   const handleLoginAs = (isAdminLogin) => {
     setIsAdmin(isAdminLogin); // Update whether Admin or User is selected
@@ -26,6 +32,7 @@ const Login = ({ onLogin }) => {
 
   const handleLogin = () => {
     if (selectedUser) {
+      localStorage.setItem('loggedInUser', JSON.stringify(selectedUser));
       onLogin(selectedUser); // Pass the selected user to App.js
     } else {
       alert("Please select a user to log in.");
