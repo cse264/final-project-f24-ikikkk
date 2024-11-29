@@ -9,7 +9,7 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     //Used the URLSearchParams interface to get the videoId: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     const searchParam = new URLSearchParams(new URL(videoLink).search);
     const videoId = searchParam.get("v");
-    const [comments, setComments] = useState([]);
+    const [comments, setComments] = useState(null);
     const [error, setError] = useState("");
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
             <YouTube videoId={videoId} opts={options} onReady={_onReady} id="video"/>
             <p>Likes: {likes}   Dislikes: {dislikes}</p>
             <h3>Comments: </h3>
-            {(comments.length > 0) ? (
+            {(comments) ? (
                 comments.map(e => 
                     <div key={e.c_id} style={styles.comments}>
                         <p>{e.u_id}: {e.body}</p>

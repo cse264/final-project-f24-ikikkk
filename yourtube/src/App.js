@@ -6,8 +6,8 @@ import axios from 'axios';
 const PORT = '5000';
 
 export default function App() {
-  const [posts, setPosts] = useState([]);
-  const [users, setUsers] = useState([]);
+  const [posts, setPosts] = useState(null);
+  const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
@@ -21,7 +21,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    if (curentUser) {
+    if (currentUser) {
     axios.get('http://localhost:' + PORT + '/posts')
       .then(response => {
         setPosts(response.data);
@@ -72,7 +72,7 @@ export default function App() {
         <span style={styles.userName}>Logged in as: {currentUser.f_name} {currentUser.l_name}</span>
         <button onClick={handleLogout} style={styles.logoutButton}>Sign Out</button>
       </div>
-      {(posts.length > 0 && users.length > 0) ? (posts.map(e =>
+      {(posts && users) ? (posts.map(e =>
         <div key={e.p_id}>
           <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
         </div>
