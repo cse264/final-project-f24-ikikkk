@@ -12,21 +12,45 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     const searchParam = new URLSearchParams(new URL(videoLink).search);
     const videoId = searchParam.get("v");
     const [comments, setComments] = useState(null);
+    const [usernames, setUsernames] = useState(null);
     const [error, setError] = useState("");
     const [postLikes, setPostLikes] = useState(likes); 
     const [postDislikes, setPostDislikes] = useState(dislikes); 
 
     useEffect(() => {
-        axios.get('http://localhost:' + PORT + '/posts/' + p_id)
+        async function getComments(){
+            axios.get('http://localhost:' + PORT + '/posts/' + p_id)
+            .then(response => {
+                setComments(response.data.comments);
+                return response.data.comments;
+            })
+            .then(async data => {
+                const newUsernames = {};
+                await Promise.all(data.map(async e => {
+                    newUsernames[e.u_id] = await getUsername(e.u_id);
+                }))
+                setUsernames(newUsernames);
+            })
+            .catch(err => {
+                setError(err.message);
+                console.log(err.message);
+            });
+        }
+        getComments();
+      }, [PORT]);
+
+      function getUsername(u_id){
+        return axios.get('http://localhost:' + PORT + '/users/' + u_id)
           .then(response => {
-            setComments(response.data.comments);
             console.log(response.data);
+            return response.data.f_name + " " + response.data.l_name;
           })
           .catch(err => {
             setError(err.message);
-            console.log(err.message);
+            console.log(error);
+            return "";
           });
-      }, [PORT]);
+      }
 
     const handleLike = () => {
         axios.put(`http://localhost:${PORT}/posts/${p_id}/like`)
@@ -64,10 +88,15 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
             <h3>Comments: </h3>
             {(comments) ? (
                 comments.map(e => 
-                    <div key={e.c_id} style={styles.comments}>
-                        <p>{e.u_id}: {e.body}</p>
-                        <p>Likes: {e.likes}   Dislikes: {e.dislikes}</p>
-                    </div>
+                    (usernames && usernames[e.u_id]) ? (
+                        <div key={e.c_id} style={styles.comments}>
+                            <p>{usernames[e.u_id]}: {e.body}</p>
+                            <p style={styles.comments}>Likes: {e.likes}   Dislikes: {e.dislikes}</p>
+                        </div>
+                    ) : (
+                        <p>Fetching comments...</p>
+                    )
+                    
                 )
             ) : (
                 <p></p>
