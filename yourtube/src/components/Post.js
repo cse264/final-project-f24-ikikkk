@@ -13,20 +13,41 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     const videoId = searchParam.get("v");
     const [comments, setComments] = useState(null);
     const [error, setError] = useState("");
+    const [usernames, setUsernames] = useState(null);
     const [postLikes, setPostLikes] = useState(likes); 
     const [postDislikes, setPostDislikes] = useState(dislikes); 
 
     useEffect(() => {
-        axios.get('http://localhost:' + PORT + '/posts/' + p_id)
+        async function getComments(){
+            axios.get('http://localhost:' + PORT + '/posts/' + p_id)
+            .then(response => {
+                setComments(response.data.comments);
+                return response.data.comments;
+            })
+            .then(async data => {
+                const newUsernames = {};
+                await Promise.all(data.map(async e => {
+                    newUsernames[e.u_id] = await getUsername(e.u_id);
+                }))
+                setUsernames(newUsernames);
+            })
+            .catch(err => {
+                console.log(err.message);
+            });
+        }
+        getComments();
+      }, [PORT]);
+
+      function getUsername(u_id){
+        return axios.get('http://localhost:' + PORT + '/users/' + u_id)
           .then(response => {
-            setComments(response.data.comments);
             console.log(response.data);
           })
           .catch(err => {
-            setError(err.message);
             console.log(err.message);
+            return "";
           });
-      }, [PORT]);
+      };
 
     const handleLike = () => {
         axios.put(`http://localhost:${PORT}/posts/${p_id}/like`)
