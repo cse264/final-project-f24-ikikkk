@@ -47,7 +47,7 @@ export default function App() {
 
   function onRefresh(){
     setRefreshing(true);
-    axios.get('http://localhost:' + PORT + '/users')
+    axios.get('http://localhost:' + PORT + '/posts')
       .then(response => {
         setPosts(response.data);
         setRefreshing(false);
@@ -80,14 +80,14 @@ export default function App() {
       {
         (posts && users) ? (posts.map(e =>
           <div key={e.p_id}>
-            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
+            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
           </div>
         )) : (<p>Fetching data...</p>)
       }
       <Fab color="primary" aria-label="add" style={styles.fab} onClick={() => setPopup(true)}>
         <AddIcon />
       </Fab>
-      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup}/>
+      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup} onRefresh={onRefresh}/>
     </div>
   );
 }
