@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import Post from './components/Post.js';
 import Login from './components/Login.js';
 import axios from 'axios';
+import Fab from '@mui/material/Fab';
+import AddIcon from "@mui/icons-material/Add";
 
 const PORT = '5000';
 
@@ -68,15 +70,20 @@ export default function App() {
 
   return (
     <div style={styles.container}>
-    <div style={styles.userBar}>
+      <div style={styles.userBar}>
         <span style={styles.userName}>Logged in as: {currentUser.f_name} {currentUser.l_name}</span>
         <button onClick={handleLogout} style={styles.logoutButton}>Sign Out</button>
       </div>
-      {(posts && users) ? (posts.map(e =>
-        <div key={e.p_id}>
-          <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
-        </div>
-      )) : (<p>Fetching data...</p>)}
+      {
+        (posts && users) ? (posts.map(e =>
+          <div key={e.p_id}>
+            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
+          </div>
+        )) : (<p>Fetching data...</p>)
+      }
+      <Fab color="primary" aria-label="add" style={styles.fab}>
+        <AddIcon />
+      </Fab>
     </div>
   );
 }
@@ -106,4 +113,9 @@ const styles = {
     borderRadius: "5px",
     cursor: "pointer",
   },
+  fab: {
+    position: "fixed", 
+    bottom: 16, 
+    right: 16,
+  }
 };
