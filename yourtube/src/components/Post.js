@@ -13,7 +13,6 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     const videoId = searchParam.get("v");
     const [comments, setComments] = useState(null);
     const [usernames, setUsernames] = useState(null);
-    const [error, setError] = useState("");
     const [postLikes, setPostLikes] = useState(likes); 
     const [postDislikes, setPostDislikes] = useState(dislikes); 
 
@@ -32,7 +31,6 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
                 setUsernames(newUsernames);
             })
             .catch(err => {
-                setError(err.message);
                 console.log(err.message);
             });
         }
@@ -46,8 +44,7 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
             return response.data.f_name + " " + response.data.l_name;
           })
           .catch(err => {
-            setError(err.message);
-            console.log(error);
+            console.log(err.message);
             return "";
           });
       }

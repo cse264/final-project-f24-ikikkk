@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Post from './components/Post.js';
 import Login from './components/Login.js';
+import Popup from './components/Popup.js';
 import axios from 'axios';
 import Fab from '@mui/material/Fab';
 import AddIcon from "@mui/icons-material/Add";
@@ -13,6 +14,7 @@ export default function App() {
   const [error, setError] = useState("");
   const [refreshing, setRefreshing] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [popup, setPopup] = useState(false);
 
   useEffect(() => {
     const savedUser = localStorage.getItem('LoggedInUser');
@@ -55,6 +57,7 @@ export default function App() {
         setRefreshing(false);
       });
   };
+
   const handleLogin = (user) => {
     localStorage.setItem('loggedInUser', JSON.stringify(user));
     setCurrentUser(user);
@@ -66,7 +69,7 @@ export default function App() {
   }
   if (!currentUser) {
     return <Login onLogin={handleLogin} />;
-  }  
+  }
 
   return (
     <div style={styles.container}>
@@ -81,9 +84,10 @@ export default function App() {
           </div>
         )) : (<p>Fetching data...</p>)
       }
-      <Fab color="primary" aria-label="add" style={styles.fab}>
+      <Fab color="primary" aria-label="add" style={styles.fab} onClick={() => setPopup(true)}>
         <AddIcon />
       </Fab>
+      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup}/>
     </div>
   );
 }
