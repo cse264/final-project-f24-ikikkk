@@ -47,7 +47,7 @@ export default function App() {
 
   function onRefresh(){
     setRefreshing(true);
-    axios.get('http://localhost:' + PORT + '/users')
+    axios.get('http://localhost:' + PORT + '/posts')
       .then(response => {
         setPosts(response.data);
         setRefreshing(false);
@@ -87,7 +87,7 @@ export default function App() {
       <Fab color="primary" aria-label="add" style={styles.fab} onClick={() => setPopup(true)}>
         <AddIcon />
       </Fab>
-      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup}/>
+      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup} onRefresh={onRefresh}/>
     </div>
   );
 }

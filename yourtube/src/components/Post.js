@@ -14,7 +14,11 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     const [comments, setComments] = useState(null);
     const [usernames, setUsernames] = useState(null);
     const [postLikes, setPostLikes] = useState(likes); 
-    const [postDislikes, setPostDislikes] = useState(dislikes); 
+    const [postDislikes, setPostDislikes] = useState(dislikes);
+    const [commentsLikes, setCommentsLikes] = useState(null); 
+    const [commentsDislikes, setCommentsDislikes] = useState(null);
+    
+
 
     useEffect(() => {
         async function getComments(){
@@ -25,10 +29,16 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
             })
             .then(async data => {
                 const newUsernames = {};
+                const newCommentsLikes = {};
+                const newCommentsDislikes = {};
                 await Promise.all(data.map(async e => {
                     newUsernames[e.u_id] = await getUsername(e.u_id);
+                    newCommentsLikes[e.c_id] = e.likes;
+                    newCommentsDislikes[e.c_id] = e.dislikes;
                 }))
                 setUsernames(newUsernames);
+                setCommentsLikes(newCommentsLikes);
+                setCommentsDislikes(newCommentsDislikes);
             })
             .catch(err => {
                 console.log(err.message);
@@ -61,6 +71,22 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
         setPostDislikes(postDislikes + 1);
     };
 
+    const handleCommentLike = (c_id) => {
+        axios.put(`http://localhost:${PORT}/posts/${p_id}/comments/${c_id}/like`)
+        .catch((err) => console.error(err));
+        setCommentsLikes(oldCommentsLikes => ({
+            ...oldCommentsLikes, [c_id]: oldCommentsLikes[c_id] + 1,
+        }));
+    };
+
+    const handleCommentDislike = (c_id) => {
+        axios.put(`http://localhost:${PORT}/posts/${p_id}/comments/${c_id}/dislike`)
+        .catch((err) => console.error(err));
+        setCommentsDislikes(oldCommentsDislikes => ({
+            ...oldCommentsDislikes, [c_id]: oldCommentsDislikes[c_id] + 1,
+        }));
+    };
+
     const options = {
         height: "195",
         width: "320",
@@ -88,7 +114,8 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
                     (usernames && usernames[e.u_id]) ? (
                         <div key={e.c_id} style={styles.comments}>
                             <p>{usernames[e.u_id]}: {e.body}</p>
-                            <p style={styles.comments}>Likes: {e.likes}   Dislikes: {e.dislikes}</p>
+                            <FaRegThumbsUp onClick={() => handleCommentLike(e.c_id)}/> {commentsLikes[e.c_id]}
+                            <FaRegThumbsDown onClick={() => handleCommentDislike(e.c_id)}/> {commentsDislikes[e.c_id]}
                         </div>
                     ) : (
                         <p>Fetching comments...</p>

@@ -4,7 +4,7 @@ import axios from "axios";
 import Popup from 'reactjs-popup';
 import TextField from '@mui/material/TextField';
 
-const PostPopup = ({PORT, u_id, popup, setPopup}) => {
+const PostPopup = ({PORT, u_id, popup, setPopup, onRefresh}) => {
     const [youtubeLink, setYoutubeLink] = useState(null);
     const [description, setDescription] = useState(null);
     const [error, setError] = useState(null);
@@ -21,8 +21,9 @@ const PostPopup = ({PORT, u_id, popup, setPopup}) => {
                     Body: body
                 })
               .then(response => {
-                setPopup(false);
+                onRefresh();
                 console.log(response);
+                setPopup(false);
                 return;
               })
               .catch(err => {
