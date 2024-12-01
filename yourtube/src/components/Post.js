@@ -2,6 +2,8 @@ import React, {useEffect, useState} from "react";
 import PropTypes from 'prop-types';
 import YouTube from "react-youtube";
 import axios from "axios";
+import { FaRegThumbsUp } from "react-icons/fa";
+import { FaRegThumbsDown } from "react-icons/fa";
 
 //Reference for embedding YouTube video
 //Reference: https://medium.com/@otooker/embedding-a-youtube-video-in-react-9be0040b050d
@@ -11,6 +13,8 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
     const videoId = searchParam.get("v");
     const [comments, setComments] = useState(null);
     const [error, setError] = useState("");
+    const [postLikes, setPostLikes] = useState(likes); 
+    const [postDislikes, setPostDislikes] = useState(dislikes); 
 
     useEffect(() => {
         axios.get('http://localhost:' + PORT + '/posts/' + p_id)
@@ -23,6 +27,18 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
             console.log(err.message);
           });
       }, [PORT]);
+
+    const handleLike = () => {
+        axios.put(`http://localhost:${PORT}/posts/${p_id}/like`)
+        .catch((err) => console.error(err));
+        setPostLikes(postLikes + 1);
+    };
+
+    const handleDislike = () => {
+        axios.put(`http://localhost:${PORT}/posts/${p_id}/dislike`)
+        .catch((err) => console.error(err));
+        setPostDislikes(postDislikes + 1);
+    };
 
     const options = {
         height: "195",
@@ -41,7 +57,10 @@ const Post = ({videoLink, body, name, likes, dislikes, p_id, PORT}) => {
         <div>
             <h2>{name}: {body}</h2>
             <YouTube videoId={videoId} opts={options} onReady={_onReady} id="video"/>
-            <p>Likes: {likes}   Dislikes: {dislikes}</p>
+            <div>
+                <FaRegThumbsUp onClick={handleLike}/> {postLikes}
+                <FaRegThumbsDown onClick={handleDislike}/> {postDislikes}
+            </div>
             <h3>Comments: </h3>
             {(comments) ? (
                 comments.map(e => 
