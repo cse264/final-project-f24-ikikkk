@@ -80,7 +80,7 @@ export default function App() {
       {
         (posts && users) ? (posts.map(e =>
           <div key={e.p_id}>
-            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
+            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
           </div>
         )) : (<p>Fetching data...</p>)
       }
