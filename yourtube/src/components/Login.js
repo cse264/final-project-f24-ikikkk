@@ -167,25 +167,23 @@ const Login = ({ onLogin }) => {
                     </Button>
                   </ButtonGroup>
                 </Box>
-                {!selectedUser && (
-                  <Box mt={3}>
-                    <Typography>Select an account:</Typography>
-                    <TextField
-                      select
-                      fullWidth
-                      onChange={handleUserSelect}
-                      value={selectedUser ? selectedUser.u_id : ''}
-                      SelectProps={{ native: true }}
-                    >
-                      <option value="" disabled>Select {isAdmin ? 'Admin' : 'User'}</option>
-                      {filteredUsers.map((user) => (
-                        <option key={user.u_id} value={user.u_id}>
-                          {user.f_name} {user.l_name} {user.is_admin ? '(Admin)' : ''}
-                        </option>
-                      ))}
-                    </TextField>
-                  </Box>
-                )}
+                <Box mt={3}>
+                  <Typography>Select an account:</Typography>
+                  <TextField
+                    select
+                    fullWidth
+                    onChange={handleUserSelect}
+                    value={selectedUser ? selectedUser.u_id : ''}
+                    SelectProps={{ native: true }}
+                  >
+                    <option value="" disabled>Select {isAdmin ? 'Admin' : 'User'}</option>
+                    {filteredUsers.map((user) => (
+                      <option key={user.u_id} value={user.u_id}>
+                        {user.f_name} {user.l_name} {user.is_admin ? '(Admin)' : ''}
+                      </option>
+                    ))}
+                  </TextField>
+                </Box>
                 <Box mt={3}>
                   <Button
                     variant="contained"
