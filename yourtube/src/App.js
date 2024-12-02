@@ -13,28 +13,15 @@ export default function App() {
   const [posts, setPosts] = useState(null);
   const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [popup, setPopup] = useState(false);
 
   useEffect(() => {
+    getPosts();
     const savedUser = localStorage.getItem('LoggedInUser');
     if (savedUser) {
       setCurrentUser(JSON.parse(savedUser));
     }
-
-  }, []);
-
-  useEffect(() => {
-    if (currentUser) {
-    axios.get('http://localhost:' + PORT + '/posts')
-      .then(response => {
-        setPosts(response.data);
-      })
-      .catch(err => {
-        setError(err.message);
-        console.log(error);
-      });
     axios.get('http://localhost:' + PORT + '/users')
       .then(response => {
         setUsers(response.data);
@@ -43,8 +30,18 @@ export default function App() {
         setError(err.message);
         console.log(error);
       });
+
+  }, []);
+
+  useEffect(() => {
+    //Checks for new posts
+    if(currentUser){
+      const timeout = setTimeout(() => {
+        getPosts();
+      }, 10000);
+      return () => clearTimeout(timeout);
     }
-  }, [PORT, currentUser]);
+  });
 
   useEffect(() => {
     const config = {
@@ -57,17 +54,15 @@ export default function App() {
     ScrollReveal().reveal(".post", {...config});
 });
 
-  function onRefresh(){
-    setRefreshing(true);
+  function getPosts(){
     axios.get('http://localhost:' + PORT + '/posts')
       .then(response => {
         setPosts(response.data);
-        setRefreshing(false);
       })
       .catch(error => {
         setError(error.message);
-        setRefreshing(false);
       });
+
   };
 
   const handleLogin = (user) => {
@@ -101,9 +96,9 @@ export default function App() {
         <button onClick={handleLogout} style={styles.logoutButton}>Sign Out</button>
       </div>
       {
-        (posts && users) ? (posts.map(e =>
+        (posts && users) ? (posts.sort((a, b) => b.p_id - a.p_id).map(e =>
           <div key={e.p_id} className='post'>
-            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
+            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
             {currentUser.is_admin && <button onClick = {() => deletePost(e.p_id)}>delete</button>}
           </div>
         )) : (<p>Fetching data...</p>)
@@ -111,7 +106,7 @@ export default function App() {
       <Fab color="primary" aria-label="add" style={styles.fab} onClick={() => setPopup(true)}>
         <FaPlus />
       </Fab>
-      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup} onRefresh={onRefresh}/>
+      <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup} onRefresh={getPosts}/>
     </div>
   );
 }
