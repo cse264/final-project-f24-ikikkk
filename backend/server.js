@@ -37,8 +37,10 @@ app.get('/users/:u_id', async (req, res) => {
         }
         let qs2 = 
         `SELECT users.u_id AS u_id, 
+        users.usr_name AS usr_name,
         users.f_name AS f_name, 
         users.l_name AS l_name,
+        users.password AS password,
         posts.p_id AS p_id, 
         posts.title AS p_title, 
         posts.body AS p_body, 
@@ -50,8 +52,10 @@ app.get('/users/:u_id', async (req, res) => {
         query(qs2).then(data => {
         const userData = {
             u_id: data.rows[0].u_id,
+            usr_name: data.rows[0].usr_name,
             f_name: data.rows[0].f_name,
             l_name: data.rows[0].l_name,
+            password: data.rows[0].password,
             posts: data.rows
             .filter(row => row.p_id)
             .map(row => ({
@@ -120,15 +124,15 @@ app.get('/posts/:p_id', async (req, res) => {
   app.post('/users', async (req, res) => {
     try {
       const newUser = req.body; 
-      if(!newUser.f_name || !newUser.l_name || !newUser.is_admin){ 
-        return res.status(400).send("Missing required fields: first name, last name, admin_priviledge");
+      if(!newUser.usr_name || !newUser.f_name || !newUser.l_name || !newUser.is_admin || !newUser.password){ 
+        return res.status(400).send("Missing required fields: username, first name, last name, admin_priviledge, password");
       }
       if (newUser.is_admin != "false" && newUser.is_admin != "true") {
         return res.status(400).send("is_admin has to be either true or false");
       } 
       let user_id_qs = `SELECT COALESCE(MAX(u_id), 0) AS max_user_id FROM users`;
       query(user_id_qs).then(newestUser => {
-        let qs1 = `INSERT INTO users (u_id, f_name, l_name, is_admin) VALUES (${newestUser.rows[0].max_user_id + 1}, '${newUser.f_name}', '${newUser.l_name}', ${newUser.is_admin});`;
+        let qs1 = `INSERT INTO users (u_id, f_name, l_name, is_admin, password, usr_name) VALUES (${newestUser.rows[0].max_user_id + 1}, '${newUser.f_name}', '${newUser.l_name}', ${newUser.is_admin}, '${newUser.password}', '${newUser.usr_name}');`;
         query(qs1).then(() => res.json({ message: "User added successfully" }));
       });
     } catch (err) {

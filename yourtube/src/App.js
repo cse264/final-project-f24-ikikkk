@@ -56,7 +56,7 @@ export default function App() {
         interval: 200, 
         reset: false, 
     };
-    sr.clean(".comment");
+    sr.clean(".post");
     sr.reveal(".post", {...config});
   }
   }, [posts]);
