@@ -13,7 +13,10 @@ export default function App() {
   const [posts, setPosts] = useState(null);
   const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState(() => {
+    const savedUser = localStorage.getItem("loggedInUser");
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
   const [popup, setPopup] = useState(false);
 
   useEffect(() => {
@@ -44,6 +47,7 @@ export default function App() {
   });
 
   useEffect(() => {
+    if (posts){
     const config = {
         origin: "left", 
         distance: "100px",
@@ -54,7 +58,8 @@ export default function App() {
     };
     sr.clean(".comment");
     sr.reveal(".post", {...config});
-  });
+  }
+  }, [posts]);
 
   function getPosts(){
     axios.get('http://localhost:' + PORT + '/posts')
