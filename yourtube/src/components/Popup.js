@@ -20,7 +20,7 @@ const PostPopup = ({PORT, u_id, popup, setPopup, onRefresh}) => {
           if(videoId && videoId.length === 11 && /^[a-zA-Z0-9_-]+$/.test(videoId)){
               axios.post('http://localhost:' + PORT + '/users/' + u_id + '/posts', {
                 Title: title,
-                Body: body
+                Body: body.replace(/'/g, "\'\'")
                 })
                 .then(response => {
                   onRefresh();
