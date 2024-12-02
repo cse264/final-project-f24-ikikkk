@@ -212,7 +212,7 @@ app.get('/posts/:p_id', async (req, res) => {
       console.error("Something went wrong: " + err);
     }
   });
-  app.delete('/posts/:p_id/comments/c_id', async (req, res) => {
+  app.delete('/posts/:p_id/comments/:c_id', async (req, res) => {
     try {
       const paramId = req.params;
       let qs1 = `SELECT * FROM posts WHERE p_id = ${paramId.p_id}`;

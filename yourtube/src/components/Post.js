@@ -8,7 +8,7 @@ import TextField from '@mui/material/TextField';
 
 //Reference for embedding YouTube video
 //Reference: https://medium.com/@otooker/embedding-a-youtube-video-in-react-9be0040b050d
-const Post = ({videoLink, body, name, u_id, likes, dislikes, p_id, PORT}) => {
+const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT}) => {
     //Used the URLSearchParams interface to get the videoId: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     const searchParam = new URLSearchParams(new URL(videoLink).search);
     const videoId = searchParam.get("v");
@@ -128,6 +128,16 @@ const Post = ({videoLink, body, name, u_id, likes, dislikes, p_id, PORT}) => {
         });
     }
 
+    const deleteComment = (c_id) => {
+        axios.delete(`http://localhost:${PORT}/posts/${p_id}/comments/${c_id}`)
+        .then(() => {
+            setComments(comments.filter(comment => comment.c_id !== c_id));
+        })
+        .catch(err => {
+            console.log(err);
+        });
+    };
+
     const options = {
         height: "195",
         width: "320",
@@ -157,6 +167,7 @@ const Post = ({videoLink, body, name, u_id, likes, dislikes, p_id, PORT}) => {
                             <p>{usernames[e.u_id]}: {e.body}</p>
                             <FaRegThumbsUp onClick={() => handleCommentLike(e.c_id)}/> {commentsLikes[e.c_id]}
                             <FaRegThumbsDown onClick={() => handleCommentDislike(e.c_id)}/> {commentsDislikes[e.c_id]}
+                            {is_admin && <button onClick = {() => deleteComment(e.c_id)}>delete</button>}
                         </div>
                     ) : (
                         <p>Fetching comments...</p>
