@@ -3,7 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { query } = require('./db');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const app = express();
 
 app.use(cors());
@@ -123,20 +124,67 @@ app.get('/posts/:p_id', async (req, res) => {
 
   app.post('/users', async (req, res) => {
     try {
-      const newUser = req.body; 
-      if(!newUser.usr_name || !newUser.f_name || !newUser.l_name || !newUser.is_admin || !newUser.password){ 
-        return res.status(400).send("Missing required fields: username, first name, last name, admin_priviledge, password");
+      const { f_name, l_name, usr_name, is_admin, password } = req.body;
+  
+      if (!usr_name || !f_name || !l_name || !is_admin || !password) {
+        return res
+          .status(400)
+          .send("Missing required fields: username, first name, last name, admin_privilege, password");
       }
-      if (newUser.is_admin != "false" && newUser.is_admin != "true") {
-        return res.status(400).send("is_admin has to be either true or false");
-      } 
+  
+      if (is_admin !== "true" && is_admin !== "false") {
+        return res.status(400).send("is_admin must be either 'true' or 'false'");
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, saltRounds);
+  
       let user_id_qs = `SELECT COALESCE(MAX(u_id), 0) AS max_user_id FROM users`;
       query(user_id_qs).then(newestUser => {
-        let qs1 = `INSERT INTO users (u_id, f_name, l_name, is_admin, password, usr_name) VALUES (${newestUser.rows[0].max_user_id + 1}, '${newUser.f_name}', '${newUser.l_name}', ${newUser.is_admin}, '${newUser.password}', '${newUser.usr_name}');`;
+        let qs1 = `
+          INSERT INTO users (u_id, f_name, l_name, is_admin, password, usr_name)
+          VALUES (${newestUser.rows[0].max_user_id + 1}, '${f_name}', '${l_name}', ${is_admin}, '${hashedPassword}', '${usr_name}');
+        `;
         query(qs1).then(() => res.json({ message: "User added successfully" }));
       });
     } catch (err) {
-      console.error("something went wrong: " + err);
+      console.error("Something went wrong: " + err);
+      res.status(500).send("Internal server error");
+    }
+  });
+  app.post('/login', async (req, res) => {
+    try {
+      const { usr_name, password } = req.body;
+  
+      if (!usr_name || !password) {
+        return res.status(400).send("Missing username or password");
+      }
+  
+      // Fetch user by username
+      const qs = `SELECT * FROM users WHERE usr_name = '${usr_name}'`;
+      const result = await query(qs);
+      const user = result.rows[0];
+  
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+  
+      // Compare the provided password with the hashed password in the database
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+  
+      if (!isPasswordValid) {
+        return res.status(401).send("Invalid username or password");
+      }
+  
+      // Remove sensitive data before sending the response
+      const { password: _, ...userWithoutPassword } = user;
+  
+      res.status(200).json({
+        message: "Login successful",
+        user: userWithoutPassword,
+      });
+    } catch (err) {
+      console.error("Error in /login:", err);
+      res.status(500).send("Internal server error");
     }
   });
 
