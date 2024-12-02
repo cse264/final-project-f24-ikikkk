@@ -183,7 +183,7 @@ const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, P
 
   const createComment = () => {
     axios
-      .post(`http://localhost:${PORT}/users/${u_id}/posts/${p_id}/comments`, { Body: newComment })
+      .post(`http://localhost:${PORT}/users/${u_id}/posts/${p_id}/comments`, { Body: newComment.replace(/'/g, "''") })
       .then(() => {
         setNewComment("");
         getComments();
