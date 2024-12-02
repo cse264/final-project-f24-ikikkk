@@ -4,7 +4,7 @@ import Login from './components/Login.js';
 import Popup from './components/Popup.js';
 import axios from 'axios';
 import Fab from '@mui/material/Fab';
-import AddIcon from "@mui/icons-material/Add";
+// import AddIcon from "@mui/icons-material/Add";
 
 const PORT = '5000';
 
@@ -85,7 +85,7 @@ export default function App() {
         )) : (<p>Fetching data...</p>)
       }
       <Fab color="primary" aria-label="add" style={styles.fab} onClick={() => setPopup(true)}>
-        <AddIcon />
+        {/* <AddIcon /> */}
       </Fab>
       <Popup PORT={PORT} u_id={currentUser.u_id} popup={popup} setPopup={setPopup} onRefresh={onRefresh}/>
     </div>

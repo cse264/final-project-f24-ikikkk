@@ -13,7 +13,6 @@ const Post = ({videoLink, body, name, u_id, likes, dislikes, p_id, PORT}) => {
     const searchParam = new URLSearchParams(new URL(videoLink).search);
     const videoId = searchParam.get("v");
     const [comments, setComments] = useState(null);
-    const [error, setError] = useState("");
     const [usernames, setUsernames] = useState(null);
     const [postLikes, setPostLikes] = useState(likes); 
     const [postDislikes, setPostDislikes] = useState(dislikes);
@@ -79,12 +78,13 @@ const Post = ({videoLink, body, name, u_id, likes, dislikes, p_id, PORT}) => {
         return axios.get('http://localhost:' + PORT + '/users/' + u_id)
           .then(response => {
             console.log(response.data);
+            return response.data.f_name + " " + response.data.l_name;
           })
           .catch(err => {
             console.log(err.message);
             return "";
           });
-      };
+      }
 
     const handleLike = () => {
         axios.put(`http://localhost:${PORT}/posts/${p_id}/like`)
