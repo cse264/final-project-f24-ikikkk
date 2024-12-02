@@ -46,9 +46,10 @@ export default function App() {
   useEffect(() => {
     const config = {
         origin: "left", 
-        distance: "300px",
-        duration: 1000, 
-        delay: 300, 
+        distance: "100px",
+        duration: 100, 
+        delay: 50,
+        interval: 200, 
         reset: false, 
     };
     sr.reveal(".post", {...config});
