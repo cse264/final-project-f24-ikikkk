@@ -1,56 +1,14 @@
 /* Login Page Styles */
-.login-container {
-    padding: 20px;
-    text-align: center;
-    font-family: Arial, sans-serif;
-  }
-  
-  .login-title {
-    color: red;
-    font-size: 36px;
-    margin-bottom: 20px;
-  }
-  
-  .login-buttons {
-    margin-bottom: 20px;
-  }
-  
-  .login-button {
-    padding: 10px 20px;
-    margin: 0 10px;
-    font-size: 16px;
-    background-color: #ddd;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .login-button:hover {
-    background-color: #ccc;
-  }
-  
-  .login-button.active {
-    background-color: #4caf50;
-    color: white;
-  }
-  
-  .login-welcome {
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-  }
-  
-  .login-dropdown {
-    margin-top: 20px;
-  }
-  
-  .login-dropdown label {
-    font-size: 16px;
-    margin-right: 10px;
-  }
-  
-  .login-dropdown select {
-    padding: 5px;
-    font-size: 16px;
-  }
+body {
+  font-family: Arial, sans-serif;
+}
+
+.login-dropdown label {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.login-dropdown select {
+  padding: 5px;
+  font-size: 16px;
+}
