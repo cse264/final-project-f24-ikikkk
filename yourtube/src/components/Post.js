@@ -16,7 +16,7 @@ import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
 //Reference for embedding YouTube video
 //Reference: https://medium.com/@otooker/embedding-a-youtube-video-in-react-9be0040b050d
-const Post = ({ videoLink, body, name, u_id, is_admin, likes, dislikes, p_id, PORT, onRefresh }) => {
+const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, PORT, onRefresh }) => {
     //Used the URLSearchParams interface to get the videoId: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     const searchParam = new URLSearchParams(new URL(videoLink).search);
   const videoId = searchParam.get("v");

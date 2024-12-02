@@ -5,6 +5,7 @@ import Popup from './components/Popup.js';
 import axios from 'axios';
 import Fab from '@mui/material/Fab';
 import { FaPlus } from "react-icons/fa";
+import ScrollReveal from 'scrollreveal';
 
 const PORT = '5000';
 
@@ -41,6 +42,17 @@ export default function App() {
       return () => clearTimeout(timeout);
     }
   });
+
+  useEffect(() => {
+    const config = {
+        origin: "left", 
+        distance: "300px",
+        duration: 1000, 
+        delay: 200, 
+        reset: true, 
+    };
+    ScrollReveal().reveal(".post", {...config});
+});
 
   function getPosts(){
     axios.get('http://localhost:' + PORT + '/posts')
@@ -85,7 +97,7 @@ export default function App() {
       </div>
       {
         (posts && users) ? (posts.sort((a, b) => b.p_id - a.p_id).map(e =>
-          <div key={e.p_id}>
+          <div key={e.p_id} className='post'>
             <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
             {currentUser.is_admin && <button onClick = {() => deletePost(e.p_id)}>delete</button>}
           </div>
