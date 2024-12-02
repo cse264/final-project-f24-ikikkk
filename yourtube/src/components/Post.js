@@ -14,6 +14,8 @@ import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbDownAltIcon from "@mui/icons-material/ThumbDownAlt";
 import ThumbDownOffAltIcon from "@mui/icons-material/ThumbDownOffAlt";
+import VideoInfo from "./VideoInfo";
+
 //Reference for embedding YouTube video
 //Reference: https://medium.com/@otooker/embedding-a-youtube-video-in-react-9be0040b050d
 const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, PORT, onRefresh }) => {
@@ -219,6 +221,7 @@ const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, P
       <CardContent>
   <Typography variant="body1">{body}</Typography>
   <hr />
+  <VideoInfo videoLink={videoLink} />
   <YouTube videoId={videoId} opts={options} />
   <div style={styles.reactions}>
     {hasLiked ? (
