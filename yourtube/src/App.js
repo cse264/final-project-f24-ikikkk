@@ -32,10 +32,13 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    setTimeout(() => {
-      onRefresh();
-    }, 10000)
-  });
+    if(currentUser){
+      const timeout = setInterval(() => {
+        onRefresh();
+      }, 10000);
+      return () => clearInterval(timeout);
+    }
+  }, [currentUser]);
 
   function onRefresh(){
     axios.get('http://localhost:' + PORT + '/posts')
@@ -45,6 +48,7 @@ export default function App() {
       .catch(error => {
         setError(error.message);
       });
+
   };
 
   const handleLogin = (user) => {

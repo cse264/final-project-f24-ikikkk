@@ -20,14 +20,14 @@ const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT
     const [commentsDislikes, setCommentsDislikes] = useState(null);
     const [newComment, setNewComment] = useState(null);
     
-    useEffect(() => {
-        async function getComments(){
-            axios.get('http://localhost:' + PORT + '/posts/' + p_id)
-            .then(response => {
-                setComments(response.data.comments);
-                return response.data.comments;
-            })
-            .then(async data => {
+    async function getComments(){
+        axios.get('http://localhost:' + PORT + '/posts/' + p_id)
+        .then(response => {
+            setComments(response.data.comments);
+            return response.data.comments;
+        })
+        .then(async data => {
+            if(data){
                 const newUsernames = {};
                 const newCommentsLikes = {};
                 const newCommentsDislikes = {};
@@ -39,45 +39,28 @@ const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT
                 setUsernames(newUsernames);
                 setCommentsLikes(newCommentsLikes);
                 setCommentsDislikes(newCommentsDislikes);
-            })
-            .catch(err => {
-                console.log(err.message);
-            });
-        }
+            }
+        })
+        .catch(err => {
+            console.log(err.message);
+        });
+    }
+
+    useEffect(() => {
         getComments();
       }, [PORT]);
 
-      function onRefresh(){
-        async function getComments(){
-            axios.get('http://localhost:' + PORT + '/posts/' + p_id)
-            .then(response => {
-                setComments(response.data.comments);
-                return response.data.comments;
-            })
-            .then(async data => {
-                const newUsernames = {};
-                const newCommentsLikes = {};
-                const newCommentsDislikes = {};
-                await Promise.all(data.map(async e => {
-                    newUsernames[e.u_id] = await getUsername(e.u_id);
-                    newCommentsLikes[e.c_id] = e.likes;
-                    newCommentsDislikes[e.c_id] = e.dislikes;
-                }))
-                setUsernames(newUsernames);
-                setCommentsLikes(newCommentsLikes);
-                setCommentsDislikes(newCommentsDislikes);
-            })
-            .catch(err => {
-                console.log(err.message);
-            });
-        }
-        getComments();
-      };
+      useEffect(() => {
+        const timeout = setTimeout(() => {
+          getComments();
+        }, 10000);
+        //Clear up the timeout since every time Post component is rerendered, a new timeout is created
+        return () => clearTimeout(timeout);
+      }, [comments]);
 
       function getUsername(u_id){
         return axios.get('http://localhost:' + PORT + '/users/' + u_id)
           .then(response => {
-            console.log(response.data);
             return response.data.f_name + " " + response.data.l_name;
           })
           .catch(err => {
@@ -120,8 +103,7 @@ const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT
         })
         .then(response => {
             setNewComment("");
-            onRefresh();
-            console.log(response);
+            getComments();
         })
         .catch(err => {
             console.log(err.message);
@@ -134,7 +116,7 @@ const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT
             setComments(comments.filter(comment => comment.c_id !== c_id));
         })
         .catch(err => {
-            console.log(err);
+            console.log(err.message);
         });
     };
 
