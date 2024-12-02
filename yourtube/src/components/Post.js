@@ -191,8 +191,8 @@ const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, P
   };
 
   const options = {
-    height: "195",
-    width: "320",
+    height: "330",
+    width: "100%",
     playerVars: { controls: 1 },
   };
 
