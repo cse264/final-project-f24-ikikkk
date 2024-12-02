@@ -12,7 +12,6 @@ export default function App() {
   const [posts, setPosts] = useState(null);
   const [users, setUsers] = useState(null);
   const [error, setError] = useState("");
-  const [refreshing, setRefreshing] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
   const [popup, setPopup] = useState(false);
 
@@ -21,19 +20,6 @@ export default function App() {
     if (savedUser) {
       setCurrentUser(JSON.parse(savedUser));
     }
-
-  }, []);
-
-  useEffect(() => {
-    if (currentUser) {
-    axios.get('http://localhost:' + PORT + '/posts')
-      .then(response => {
-        setPosts(response.data);
-      })
-      .catch(err => {
-        setError(err.message);
-        console.log(error);
-      });
     axios.get('http://localhost:' + PORT + '/users')
       .then(response => {
         setUsers(response.data);
@@ -42,19 +28,22 @@ export default function App() {
         setError(err.message);
         console.log(error);
       });
-    }
-  }, [PORT, currentUser]);
+
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      onRefresh();
+    }, 10000)
+  });
 
   function onRefresh(){
-    setRefreshing(true);
     axios.get('http://localhost:' + PORT + '/posts')
       .then(response => {
         setPosts(response.data);
-        setRefreshing(false);
       })
       .catch(error => {
         setError(error.message);
-        setRefreshing(false);
       });
   };
 
