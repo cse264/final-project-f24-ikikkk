@@ -8,14 +8,14 @@ import TextField from '@mui/material/TextField';
 
 //Reference for embedding YouTube video
 //Reference: https://medium.com/@otooker/embedding-a-youtube-video-in-react-9be0040b050d
-const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT}) => {
+const Post = ({videoLink, body, name, u_id, is_admin, p_id, PORT}) => {
     //Used the URLSearchParams interface to get the videoId: https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams
     const searchParam = new URLSearchParams(new URL(videoLink).search);
     const videoId = searchParam.get("v");
     const [comments, setComments] = useState(null);
     const [usernames, setUsernames] = useState(null);
-    const [postLikes, setPostLikes] = useState(likes); 
-    const [postDislikes, setPostDislikes] = useState(dislikes);
+    const [postLikes, setPostLikes] = useState(null); 
+    const [postDislikes, setPostDislikes] = useState(null);
     const [commentsLikes, setCommentsLikes] = useState(null); 
     const [commentsDislikes, setCommentsDislikes] = useState(null);
     const [newComment, setNewComment] = useState(null);
@@ -24,6 +24,8 @@ const Post = ({videoLink, body, name, u_id, is_admin,likes, dislikes, p_id, PORT
         axios.get('http://localhost:' + PORT + '/posts/' + p_id)
         .then(response => {
             setComments(response.data.comments);
+            setPostLikes(response.data.likes);
+            setPostDislikes(response.data.dislikes);
             return response.data.comments;
         })
         .then(async data => {
@@ -170,8 +172,6 @@ Post.propTypes = {
     body: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     u_id: PropTypes.number.isRequired,
-    likes: PropTypes.number.isRequired,
-    dislikes: PropTypes.number.isRequired,
     p_id: PropTypes.number.isRequired,
     PORT: PropTypes.string.isRequired,
   }
