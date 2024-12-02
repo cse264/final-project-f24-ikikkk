@@ -5,6 +5,7 @@ import Popup from './components/Popup.js';
 import axios from 'axios';
 import Fab from '@mui/material/Fab';
 import { FaPlus } from "react-icons/fa";
+import ScrollReveal from 'scrollreveal';
 
 const PORT = '5000';
 
@@ -44,6 +45,17 @@ export default function App() {
       });
     }
   }, [PORT, currentUser]);
+
+  useEffect(() => {
+    const config = {
+        origin: "left", 
+        distance: "300px",
+        duration: 1000, 
+        delay: 200, 
+        reset: true, 
+    };
+    ScrollReveal().reveal(".post", {...config});
+});
 
   function onRefresh(){
     setRefreshing(true);
@@ -90,7 +102,7 @@ export default function App() {
       </div>
       {
         (posts && users) ? (posts.map(e =>
-          <div key={e.p_id}>
+          <div key={e.p_id} className='post'>
             <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
             {currentUser.is_admin && <button onClick = {() => deletePost(e.p_id)}>delete</button>}
           </div>
