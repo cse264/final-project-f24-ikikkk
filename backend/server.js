@@ -234,6 +234,22 @@ app.get('/posts/:p_id', async (req, res) => {
     }
   });
 
+  app.delete('/users/:u_id', async (req, res) => {
+    try {
+      const paramId = req.params.u_id;
+      let qs1 = `SELECT * FROM users WHERE u_id = ${paramId}`;
+      query(qs1).then(data => {
+        if (data.rows.length === 0) { 
+          return res.status(404).send("User not found");
+        }
+        let qs2 = `DELETE FROM users WHERE u_id = ${paramId}`
+        query(qs2).then(() => res.json({ message: "User deleted successfully" }));
+      });
+    } catch (err) {
+      console.error("Something went wrong: " + err);
+    }
+  });
+
   app.put('/posts/:p_id/like', async (req, res) => {
     try {
       const paramId = req.params.p_id;
