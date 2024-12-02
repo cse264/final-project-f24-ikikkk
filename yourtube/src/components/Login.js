@@ -1,79 +1,89 @@
 import React, { useEffect, useState } from 'react';
 import './login.css';
 import axios from 'axios';
-import { Button, ButtonGroup, TextField, Typography, Container, Box, Checkbox, FormControlLabel } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Typography,
+  Container,
+  Box,
+} from '@mui/material';
 
 const PORT = '5000';
 
 const Login = ({ onLogin }) => {
   const [isReturningUser, setIsReturningUser] = useState(null); // Tracks if returning or new user
-  const [isAdmin, setIsAdmin] = useState(false); // Tracks if Admin login is selected
-  const [selectedUser, setSelectedUser] = useState(null); // Tracks selected user
+  const [userDetails, setUserDetails] = useState({ usr_name: '', password: '' }); // User input for login
   const [users, setUsers] = useState([]); // State to store user data
-  const [newUserDetails, setNewUserDetails] = useState({ f_name: '', l_name: '', is_admin: false }); // New user input
+  const [newUserDetails, setNewUserDetails] = useState({ f_name: '', l_name: '', usr_name: '', password: '' }); // New user input
 
   useEffect(() => {
     axios
-      .get('http://localhost:' + PORT + '/users')
+      .get(`http://localhost:${PORT}/users`)
       .then((response) => {
         setUsers(response.data);
       })
       .catch((error) => {
-        console.log(error);
+        console.error(error);
       });
   }, []);
 
-  const handleLoginAs = (isAdminLogin) => {
-    setIsAdmin(isAdminLogin); // Update whether Admin or User is selected
-    setSelectedUser(null); // Reset the selected user
-  };
-
-  const handleUserSelect = (e) => {
-    const userId = e.target.value;
-    const user = users.find((user) => user.u_id.toString() === userId);
-    setSelectedUser(user);
-  };
-
-  const handleLogin = () => {
-    if (selectedUser) {
-      localStorage.setItem('loggedInUser', JSON.stringify(selectedUser));
-      onLogin(selectedUser); // Pass the selected user to App.js
-    } else {
-      alert('Please select a user to log in.');
-    }
+  const handleUserChange = (e) => {
+    setUserDetails({ ...userDetails, [e.target.name]: e.target.value });
   };
 
   const handleNewUserChange = (e) => {
     setNewUserDetails({ ...newUserDetails, [e.target.name]: e.target.value });
   };
 
+  const handleLogin = () => {
+    const { usr_name, password } = userDetails;
+  
+    if (!usr_name || !password) {
+      alert('Please enter both username and password.');
+      return;
+    }
+  
+    axios
+      .post(`http://localhost:${PORT}/login`, { usr_name, password })
+      .then((response) => {
+        const user = response.data.user;
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+        onLogin(user);
+        alert('Login successful!');
+      })
+      .catch((error) => {
+        console.error(error.response?.data || error.message);
+        alert('Invalid username or password.');
+      });
+  };
+
   const handleNewUserSubmit = () => {
     if (!newUserDetails.f_name || !newUserDetails.l_name) {
-      alert("Please provide both first and last name.");
+      alert('Please provide both first and last name.');
       return;
     }
 
     const payload = {
       f_name: newUserDetails.f_name.trim(),
       l_name: newUserDetails.l_name.trim(),
-      is_admin: newUserDetails.is_admin ? "true" : "false",
+      usr_name: newUserDetails.usr_name.trim(),
+      password: newUserDetails.password.trim(),
+      is_admin: "false",
     };
 
     axios
       .post(`http://localhost:${PORT}/users`, payload)
       .then((response) => {
-        alert("User created successfully!");
+        alert('User created successfully!');
         setUsers([...users, response.data]);
-        setIsReturningUser(true); // Switch to returning user view
+        setIsReturningUser(true);
       })
       .catch((error) => {
-        console.error("Error response:", error.response?.data || error.message);
-        alert("Failed to create user.");
+        console.error('Error response:', error.response?.data || error.message);
+        alert('Failed to create user.');
       });
   };
-
-  // Filter the users based on the selected login type
-  const filteredUsers = users.filter((user) => user.is_admin === isAdmin);
 
   return (
     <Container
@@ -83,24 +93,28 @@ const Login = ({ onLogin }) => {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '50vh',  // Adjust the container height to take up half of the viewport
+        minHeight: '50vh',
         backgroundColor: '#f5f5f5',
         borderRadius: 3,
         boxShadow: 3,
         padding: 3,
-        marginTop: '5vh', // Added margin-top for spacing from the top
-        marginBottom: '5vh', // Added margin-bottom for spacing from the bottom
+        marginTop: '5vh',
+        marginBottom: '5vh',
       }}
     >
       <Box textAlign="center" py={5}>
-        <Typography variant="h3" gutterBottom sx={{ fontWeight: 'bold', color: '#e53935', letterSpacing: 1 }}>
+        <Typography
+          variant="h3"
+          gutterBottom
+          sx={{ fontWeight: 'bold', color: '#e53935', letterSpacing: 1 }}
+        >
           YourTube
         </Typography>
 
         {isReturningUser === null && (
           <>
             <Typography variant="h6" gutterBottom sx={{ fontWeight: '500' }}>
-              Are you a returning user or a new user?
+              Welcome To YourTube
             </Typography>
             <Box mt={3}>
               <Button
@@ -140,49 +154,29 @@ const Login = ({ onLogin }) => {
         {isReturningUser !== null && (
           <>
             <Typography variant="h5" gutterBottom sx={{ fontWeight: 'bold' }}>
-              {isReturningUser ? 'Log In' : 'Create a New Account'}
+              {isReturningUser ? 'Login' : 'Create a New Account'}
             </Typography>
 
             {isReturningUser ? (
               <>
                 <Box mt={3}>
-                  <ButtonGroup variant="contained" fullWidth>
-                    <Button
-                      onClick={() => handleLoginAs(false)}
-                      sx={{
-                        backgroundColor: !isAdmin ? '#801613' : '#e53935',
-                        '&:hover': { backgroundColor: !isAdmin ? '#801613' : '#d32f2f' },
-                      }}
-                    >
-                      Log in as User
-                    </Button>
-                    <Button
-                      onClick={() => handleLoginAs(true)}
-                      sx={{
-                        backgroundColor: isAdmin ? '#801613' : '#e53935',
-                        '&:hover': { backgroundColor: isAdmin ? '#801613' : '#d32f2f' },
-                      }}
-                    >
-                      Log in as Admin
-                    </Button>
-                  </ButtonGroup>
-                </Box>
-                <Box mt={3}>
-                  <Typography>Select an account:</Typography>
                   <TextField
-                    select
+                    label="Username"
+                    name="usr_name"
                     fullWidth
-                    onChange={handleUserSelect}
-                    value={selectedUser ? selectedUser.u_id : ''}
-                    SelectProps={{ native: true }}
-                  >
-                    <option value="" disabled>Select {isAdmin ? 'Admin' : 'User'}</option>
-                    {filteredUsers.map((user) => (
-                      <option key={user.u_id} value={user.u_id}>
-                        {user.f_name} {user.l_name} {user.is_admin ? '(Admin)' : ''}
-                      </option>
-                    ))}
-                  </TextField>
+                    value={userDetails.usr_name}
+                    onChange={handleUserChange}
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Password"
+                    name="password"
+                    fullWidth
+                    type="password"
+                    value={userDetails.password}
+                    onChange={handleUserChange}
+                    sx={{ marginBottom: 2 }}
+                  />
                 </Box>
                 <Box mt={3}>
                   <Button
@@ -220,20 +214,22 @@ const Login = ({ onLogin }) => {
                     onChange={handleNewUserChange}
                     sx={{ marginBottom: 2 }}
                   />
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={newUserDetails.is_admin}
-                        onChange={(e) =>
-                          setNewUserDetails({ ...newUserDetails, is_admin: e.target.checked })
-                        }
-                        sx={{
-                          color: '#e53935',
-                          '&.Mui-checked': { color: '#e53935' },
-                        }}
-                      />
-                    }
-                    label="Admin Account"
+                  <TextField
+                    label="Username"
+                    name="usr_name"
+                    fullWidth
+                    value={newUserDetails.usr_name}
+                    onChange={handleNewUserChange}
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Password"
+                    name="password"
+                    fullWidth
+                    type="password"
+                    value={newUserDetails.password}
+                    onChange={handleNewUserChange}
+                    sx={{ marginBottom: 2 }}
                   />
                 </Box>
                 <Box mt={3}>
@@ -256,7 +252,7 @@ const Login = ({ onLogin }) => {
             <Box mt={3}>
               <Button
                 variant="outlined"
-                onClick={() => setIsReturningUser(null)} // Button to toggle back to the initial state
+                onClick={() => setIsReturningUser(null)}
                 sx={{
                   borderColor: '#e53935',
                   color: '#e53935',
