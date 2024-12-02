@@ -52,6 +52,7 @@ export default function App() {
         interval: 200, 
         reset: false, 
     };
+    sr.clean(".comment");
     sr.reveal(".post", {...config});
   });
 
@@ -79,17 +80,6 @@ export default function App() {
     return <Login onLogin={handleLogin} />;
   }
 
-  const deletePost = (p_id) => {
-    axios.delete(`http://localhost:${PORT}/posts/${p_id}`)
-      .then(() => {
-        setPosts(posts.filter(post => post.p_id !== p_id));
-      })
-      .catch(err => {
-        setError(err.message);
-        console.log(err);
-      });
-  };
-
   return (
     <div style={styles.container}>
       <div style={styles.userBar}>
@@ -100,7 +90,6 @@ export default function App() {
         (posts && users) ? (posts.sort((a, b) => b.p_id - a.p_id).map(e =>
           <div key={e.p_id} className='post'>
             <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
-            {currentUser.is_admin && <button onClick = {() => deletePost(e.p_id)}>delete</button>}
           </div>
         )) : (<p>Fetching data...</p>)
       }
