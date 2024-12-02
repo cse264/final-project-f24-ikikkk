@@ -59,6 +59,14 @@ const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, P
     }
   };
 
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      getComments();
+    }, 10000);
+    //Clear up the timeout since every time Post component is rerendered, a new timeout is created
+    return () => clearTimeout(timeout);
+  }, [comments]);
+
   const handleDelete = () => {
     axios
         .delete(`http://localhost:${PORT}/posts/${p_id}`)
@@ -191,8 +199,8 @@ const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, P
   };
 
   const options = {
-    height: "330",
-    width: "100%",
+    height: "195",
+    width: "320",
     playerVars: { controls: 1 },
   };
 
