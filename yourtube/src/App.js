@@ -5,7 +5,7 @@ import Popup from './components/Popup.js';
 import axios from 'axios';
 import Fab from '@mui/material/Fab';
 import { FaPlus } from "react-icons/fa";
-import ScrollReveal from 'scrollreveal';
+import sr from './components/ScrollReveal.js';
 
 const PORT = '5000';
 
@@ -48,11 +48,11 @@ export default function App() {
         origin: "left", 
         distance: "300px",
         duration: 1000, 
-        delay: 200, 
-        reset: true, 
+        delay: 300, 
+        reset: false, 
     };
-    ScrollReveal().reveal(".post", {...config});
-});
+    sr.reveal(".post", {...config});
+  });
 
   function getPosts(){
     axios.get('http://localhost:' + PORT + '/posts')
