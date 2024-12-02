@@ -71,6 +71,18 @@ export default function App() {
     return <Login onLogin={handleLogin} />;
   }
 
+  const deletePost = (postId) => {
+    axios.delete(`http://localhost:${PORT}/posts/${postId}`)
+      .then(() => {
+        // Remove the deleted post from the state
+        setPosts(posts.filter(post => post.p_id !== postId));
+      })
+      .catch(err => {
+        setError(err.message);
+        console.log(err);
+      });
+  };
+
   return (
     <div style={styles.container}>
       <div style={styles.userBar}>
@@ -81,6 +93,7 @@ export default function App() {
         (posts && users) ? (posts.map(e =>
           <div key={e.p_id}>
             <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} likes={e.likes} dislikes={e.dislikes} p_id={e.p_id} PORT={PORT} />
+            {currentUser.is_admin && <button onClick = {() => deletePost(e.p_id)}>delete</button>}
           </div>
         )) : (<p>Fetching data...</p>)
       }
