@@ -117,6 +117,25 @@ app.get('/posts/:p_id', async (req, res) => {
     }
   });
 
+  app.post('/users', async (req, res) => {
+    try {
+      const newUser = req.body; 
+      if(!newUser.f_name || !newUser.l_name || !newUser.is_admin){ 
+        return res.status(400).send("Missing required fields: first name, last name, admin_priviledge");
+      }
+      if (newUser.is_admin != "false" || newUser.is_admin != "true") {
+        return res.status(400).send("is_admin has to be either true or false");
+      } 
+      let user_id_qs = `SELECT COALESCE(MAX(u_id), 0) AS max_user_id FROM users`;
+      query(user_id_qs).then(newestUser => {
+        let qs1 = `INSERT INTO users (u_id, f_name, l_name, is_admin) VALUES (${newestUser.rows[0].max_user_id + 1}, '${newUser.f_name}', '${newUser.l_name}', ${newUser.is_admin});`;
+        query(qs1).then(() => res.json({ message: "User added successfully" }));
+      });
+    } catch (err) {
+      console.error("something went wrong: " + err);
+    }
+  });
+
   app.post('/users/:u_id/posts', async (req, res) => {
     try {
       const newPost = req.body; 
