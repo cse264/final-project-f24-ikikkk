@@ -88,7 +88,7 @@ export default function App() {
   return (
     <div style={styles.container}>
       <div style={styles.userBar}>
-        <span style={styles.userName}>Logged in as: {currentUser.f_name} {currentUser.l_name}</span>
+        <span style={styles.userName}>Logged in as: {currentUser.usr_name} ({currentUser.f_name} {currentUser.l_name})</span>
         <button onClick={handleLogout} style={styles.logoutButton}>Sign Out</button>
       </div>
       {
