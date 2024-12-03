@@ -80,7 +80,7 @@ const Post = ({ videoLink, body, name, u_id, is_admin,  likes, dislikes, p_id, P
   const getUsername = async (u_id) => {
     try {
       const response = await axios.get(`http://localhost:${PORT}/users/${u_id}`);
-      return `${response.data.f_name} ${response.data.l_name}`;
+      return `${response.data.usr_name}`;
     } catch (error) {
       console.error("Error fetching username:", error);
       return "Unknown User";

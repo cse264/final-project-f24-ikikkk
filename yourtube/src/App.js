@@ -94,7 +94,7 @@ export default function App() {
       {
         (posts && users) ? (posts.sort((a, b) => b.p_id - a.p_id).map(e =>
           <div key={e.p_id} className='post'>
-            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
+            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].usr_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
           </div>
         )) : (<p>Fetching data...</p>)
       }
