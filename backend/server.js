@@ -137,14 +137,20 @@ app.get('/posts/:p_id', async (req, res) => {
       }
   
       const hashedPassword = await bcrypt.hash(password, saltRounds);
-  
-      let user_id_qs = `SELECT COALESCE(MAX(u_id), 0) AS max_user_id FROM users`;
-      query(user_id_qs).then(newestUser => {
-        let qs1 = `
-          INSERT INTO users (u_id, f_name, l_name, is_admin, password, usr_name)
-          VALUES (${newestUser.rows[0].max_user_id + 1}, '${f_name}', '${l_name}', ${is_admin}, '${hashedPassword}', '${usr_name}');
-        `;
-        query(qs1).then(() => res.json({ message: "User added successfully" }));
+      
+      let qs1 = `SELECT * FROM users WHERE usr_name = '${usr_name}'`;
+      query(qs1).then(data => {
+        if (data.rows.length > 0) { 
+          return res.status(400).send("Username already taken" );
+        }
+        let user_id_qs = `SELECT COALESCE(MAX(u_id), 0) AS max_user_id FROM users`;
+        query(user_id_qs).then(newestUser => {
+          let qs1 = `
+            INSERT INTO users (u_id, f_name, l_name, is_admin, password, usr_name)
+            VALUES (${newestUser.rows[0].max_user_id + 1}, '${f_name}', '${l_name}', ${is_admin}, '${hashedPassword}', '${usr_name}');
+          `;
+          query(qs1).then(() => res.json({ message: "User added successfully" }));
+        });
       });
     } catch (err) {
       console.error("Something went wrong: " + err);

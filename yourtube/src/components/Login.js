@@ -81,7 +81,7 @@ const Login = ({ onLogin }) => {
       })
       .catch((error) => {
         console.error('Error response:', error.response?.data || error.message);
-        alert('Failed to create user.');
+        alert(error.response?.data);
       });
   };
 
