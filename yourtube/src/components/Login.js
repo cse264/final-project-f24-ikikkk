@@ -16,15 +16,16 @@ const Login = ({ onLogin }) => {
   const [userDetails, setUserDetails] = useState({ usr_name: '', password: '' }); // User input for login
   const [users, setUsers] = useState([]); // State to store user data
   const [newUserDetails, setNewUserDetails] = useState({ f_name: '', l_name: '', usr_name: '', password: '' }); // New user input
-
+  const [loginError, setLoginError] = useState("");
+  const [createError, setCreateError] = useState("");
   useEffect(() => {
     axios
       .get(`http://localhost:${PORT}/users`)
       .then((response) => {
         setUsers(response.data);
       })
-      .catch((error) => {
-        console.error(error);
+      .catch((err) => {
+        console.error(err);
       });
   }, []);
 
@@ -40,7 +41,7 @@ const Login = ({ onLogin }) => {
     const { usr_name, password } = userDetails;
   
     if (!usr_name || !password) {
-      alert('Please enter both username and password.');
+      setLoginError('Please enter both username and password.');
       return;
     }
   
@@ -50,17 +51,18 @@ const Login = ({ onLogin }) => {
         const user = response.data.user;
         localStorage.setItem('loggedInUser', JSON.stringify(user));
         onLogin(user);
-        alert('Login successful!');
+        setLoginError("");
+        console.log('Login successful!');
       })
-      .catch((error) => {
-        console.error(error.response?.data || error.message);
-        alert('Invalid username or password.');
+      .catch((err) => {
+        console.error(err.response?.data || err.message);
+        setLoginError('Invalid username or password.');
       });
   };
 
   const handleNewUserSubmit = () => {
-    if (!newUserDetails.f_name || !newUserDetails.l_name) {
-      alert('Please provide both first and last name.');
+    if (!newUserDetails.usr_name || !newUserDetails.f_name || !newUserDetails.l_name || !newUserDetails.password) {
+      setCreateError("Please provide the first name, last name, username and password.");
       return;
     }
 
@@ -75,13 +77,13 @@ const Login = ({ onLogin }) => {
     axios
       .post(`http://localhost:${PORT}/users`, payload)
       .then((response) => {
-        alert('User created successfully!');
+        console.log('User created successfully!');
         setUsers([...users, response.data]);
         setIsReturningUser(true);
       })
-      .catch((error) => {
-        console.error('Error response:', error.response?.data || error.message);
-        alert(error.response?.data);
+      .catch((err) => {
+        console.error('Error response:', err.response?.data || err.message);
+        setCreateError(err.response?.data);
       });
   };
 
@@ -160,6 +162,11 @@ const Login = ({ onLogin }) => {
             {isReturningUser ? (
               <>
                 <Box mt={3}>
+                  {loginError && 
+                    <Typography variant="h7" gutterBottom sx={{ fontWeight: 'bold', backgroundColor: 'red' }}>
+                      {loginError}
+                    </Typography>
+                  }
                   <TextField
                     label="Username"
                     name="usr_name"
@@ -198,6 +205,11 @@ const Login = ({ onLogin }) => {
             ) : (
               <>
                 <Box mt={2}>
+                  {createError && 
+                    <Typography variant="h7" gutterBottom sx={{ fontWeight: 'bold', backgroundColor: 'red' }}>
+                      {createError}
+                    </Typography>
+                  }
                   <TextField
                     label="First Name"
                     name="f_name"
@@ -252,7 +264,13 @@ const Login = ({ onLogin }) => {
             <Box mt={3}>
               <Button
                 variant="outlined"
-                onClick={() => setIsReturningUser(null)}
+                onClick={() => {
+                  setIsReturningUser(null);
+                  setCreateError("");
+                  setLoginError("");
+                  setUserDetails({ usr_name: '', password: '' });
+                  setNewUserDetails({ f_name: '', l_name: '', usr_name: '', password: '' });
+                }}
                 sx={{
                   borderColor: '#e53935',
                   color: '#e53935',
