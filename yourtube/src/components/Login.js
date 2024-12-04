@@ -37,6 +37,16 @@ const Login = ({ onLogin }) => {
     setNewUserDetails({ ...newUserDetails, [e.target.name]: e.target.value });
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      if (isReturningUser) {
+        handleLogin(); // Trigger login
+      } else {
+        handleNewUserSubmit(); // Trigger account creation
+      }
+    }
+  };
+
   const handleLogin = () => {
     const { usr_name, password } = userDetails;
 
@@ -184,6 +194,7 @@ const Login = ({ onLogin }) => {
                     fullWidth
                     value={userDetails.usr_name}
                     onChange={handleUserChange}
+                    onKeyDown={handleKeyDown}
                     sx={{ marginBottom: 2 }}
                   />
                   <TextField
@@ -193,6 +204,7 @@ const Login = ({ onLogin }) => {
                     type="password"
                     value={userDetails.password}
                     onChange={handleUserChange}
+                    onKeyDown={handleKeyDown}
                     sx={{ marginBottom: 2 }}
                   />
                 </Box>
@@ -238,6 +250,7 @@ const Login = ({ onLogin }) => {
                     fullWidth
                     value={newUserDetails.f_name}
                     onChange={handleNewUserChange}
+                    onKeyDown={handleKeyDown}
                     sx={{ marginBottom: 2 }}
                   />
                   <TextField
@@ -246,6 +259,7 @@ const Login = ({ onLogin }) => {
                     fullWidth
                     value={newUserDetails.l_name}
                     onChange={handleNewUserChange}
+                    onKeyDown={handleKeyDown}
                     sx={{ marginBottom: 2 }}
                   />
                   <TextField
@@ -254,6 +268,7 @@ const Login = ({ onLogin }) => {
                     fullWidth
                     value={newUserDetails.usr_name}
                     onChange={handleNewUserChange}
+                    onKeyDown={handleKeyDown}
                     sx={{ marginBottom: 2 }}
                   />
                   <TextField
@@ -263,6 +278,7 @@ const Login = ({ onLogin }) => {
                     type="password"
                     value={newUserDetails.password}
                     onChange={handleNewUserChange}
+                    onKeyDown={handleKeyDown}
                     sx={{ marginBottom: 2 }}
                   />
                 </Box>
@@ -294,14 +310,17 @@ const Login = ({ onLogin }) => {
                   setNewUserDetails({ f_name: '', l_name: '', usr_name: '', password: '' });
                 }}
                 sx={{
-                  borderColor: '#e53935',
                   color: '#e53935',
-                  '&:hover': { borderColor: '#d32f2f', backgroundColor: 'rgba(229, 57, 53, 0.1)' },
-                  padding: '8px 20px',
+                  borderColor: '#e53935',
+                  '&:hover': {
+                    borderColor: '#d32f2f',
+                    backgroundColor: 'rgba(229, 57, 53, 0.1)',
+                  },
                   fontSize: '1rem',
+                  padding: '10px 20px',
                 }}
               >
-                Go Back
+                Back
               </Button>
             </Box>
           </>
