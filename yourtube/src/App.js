@@ -48,15 +48,18 @@ export default function App() {
 
   useEffect(() => {
     if (posts){
-    const config = {
+      const config = {
         opacity: 0,
-        duration: 1000, 
+        duration: 1000,
         delay: 50,
-        interval: 500, 
-        reset: false, 
-    };
-    sr.reveal(".post", {...config});
-  }
+        interval: 500,
+        reset: false,
+      };
+      const timeout = setTimeout(() => {
+        sr.reveal(".post", config);
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
   }, [posts]);
 
   function getPosts(){

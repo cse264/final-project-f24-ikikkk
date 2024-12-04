@@ -301,17 +301,22 @@ app.get('/posts/:p_id', async (req, res) => {
         if (userData.rows.length === 0) {
           return res.status(404).send("User not found");
         }
-        let qs2 = `DELETE FROM posts WHERE u_id = ${paramId}`;
+        let qs2 = `DELETE FROM users WHERE u_id = ${paramId}`;
         query(qs2).then(() => {
           let qs3 = `SELECT * FROM comments WHERE u_id = ${paramId}`;
-          query(qs3).then(data => {
+          query(qs3).then((data) => {
             if (data.rows.length > 0) {
               let qs4 = `DELETE FROM comments WHERE u_id = ${paramId}`;
               query(qs4).then(() => {
-                let qs5 = `DELETE FROM users WHERE u_id = ${paramId}`;
-                return query(qs5).then(() =>
-                  res.json({ message: "User and their posts and comments deleted successfully" })
-                );
+                let qs5 = `SELECT * FROM posts WHERE u_id = ${paramId}`;
+                query(qs5).then((data) => {
+                  if (data.rows.length > 0) {
+                    let qs6 = `DELETE FROM posts WHERE u_id = ${paramId}`;
+                    return query(qs6).then(() =>
+                    res.json({ message: "User and their posts and comments deleted successfully" })
+                    );
+                  }
+                });
               });
             } 
             res.json({ message: "User deleted successfully" });
