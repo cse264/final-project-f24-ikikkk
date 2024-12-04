@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import './login.css';
 import axios from 'axios';
+import YourTube from './YourTube_logo.png';
+
 import {
   Button,
   TextField,
@@ -115,13 +117,7 @@ const Login = ({ onLogin }) => {
       }}
     >
       <Box textAlign="center" py={5}>
-        <Typography
-          variant="h3"
-          gutterBottom
-          sx={{ fontWeight: 'bold', color: '#e53935', letterSpacing: 1 }}
-        >
-          YourTube
-        </Typography>
+      <img src={YourTube} alt="yourtube_logo" style={{width: 300}} />
 
         {isReturningUser === null && (
           <>
