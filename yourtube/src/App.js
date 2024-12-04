@@ -55,7 +55,6 @@ export default function App() {
         interval: 500, 
         reset: false, 
     };
-    sr.clean(".post");
     sr.reveal(".post", {...config});
   }
   }, [posts]);
