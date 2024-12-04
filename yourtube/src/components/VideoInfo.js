@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 const VideoInfo = ({ videoLink }) => {
     const [title, setTitle] = useState(null);
     const [channel, setChannel] = useState(null);
+    const [view, setView] = useState(null);
 
     const fetchVideo = () => {
         const url = new URL(videoLink);
@@ -14,14 +15,15 @@ const VideoInfo = ({ videoLink }) => {
             const videoId = searchParam.get("v");
             console.log(videoId);
             if (videoId && videoId.length === 11 && /^[a-zA-Z0-9_-]+$/.test(videoId)) {
-                axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&fields=items(id%2Csnippet)&key=AIzaSyCVavSoDzEhgOkOekDQyTnZ70M8hAWQgBs`)
+                axios.get(`https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${videoId}&fields=items(id,snippet,statistics)&key=AIzaSyCVavSoDzEhgOkOekDQyTnZ70M8hAWQgBs`)
                     .then(response => {
                         console.log(JSON.stringify(response.data.items[0]));
-                        return response.data.items[0].snippet;
+                        return response.data.items[0];
                     })
                     .then(data => {
-                        setTitle(data.title);
-                        setChannel(data.channelTitle);
+                        setTitle(data.snippet.title);
+                        setChannel(data.snippet.channelTitle);
+                        setView(data.statistics.viewCount);
                     })
                     .catch(err => console.log(err));
             } else{console.log("Invalid Youtube Video ID");}
@@ -39,6 +41,9 @@ const VideoInfo = ({ videoLink }) => {
             </Typography>
             <Typography variant="body2">
                 Channel: {channel}
+            </Typography>
+            <Typography variant="body2">
+                Views: {view !== null ? Number(view).toLocaleString() : "Loading..."}
             </Typography>
         </div>
     );
