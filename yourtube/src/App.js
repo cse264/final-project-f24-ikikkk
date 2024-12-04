@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Post from './components/Post.js';
 import Login from './components/Login.js';
 import Popup from './components/Popup.js';
@@ -19,7 +19,7 @@ export default function App() {
   });
   const [popup, setPopup] = useState(false);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     getPosts();
     const savedUser = localStorage.getItem('LoggedInUser');
     if (savedUser) {
@@ -88,13 +88,13 @@ export default function App() {
   return (
     <div style={styles.container}>
       <div style={styles.userBar}>
-        <span style={styles.userName}>Logged in as: {currentUser.f_name} {currentUser.l_name}</span>
+        <span style={styles.userName}>Logged in as: {currentUser.usr_name} ({currentUser.f_name} {currentUser.l_name})</span>
         <button onClick={handleLogout} style={styles.logoutButton}>Sign Out</button>
       </div>
       {
         (posts && users) ? (posts.sort((a, b) => b.p_id - a.p_id).map(e =>
           <div key={e.p_id} className='post'>
-            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].f_name + " " + users.filter(user => user.u_id === e.u_id)[0].l_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
+            <Post videoLink={e.title} body={e.body} name={users.filter(user => user.u_id === e.u_id)[0].usr_name} u_id={currentUser.u_id} is_admin={currentUser.is_admin} p_id={e.p_id} PORT={PORT} />
           </div>
         )) : (<p>Fetching data...</p>)
       }
@@ -135,5 +135,6 @@ const styles = {
     position: "fixed", 
     bottom: 16, 
     right: 16,
+    backgroundColor: "#e53935",
   }
 };

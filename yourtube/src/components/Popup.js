@@ -94,15 +94,16 @@ const PostPopup = ({ PORT, u_id, popup, setPopup, onRefresh }) => {
             color="primary"
             fullWidth
             onClick={() => createPost(youtubeLink, description)}
-            style={{ marginBottom: "10px" }}
+            style={{ marginBottom: "10px", backgroundColor: "#e53935" }}
           >
             Submit
           </Button>
           <Button
             variant="outlined"
-            color="secondary"
+            color="#e53935"
             fullWidth
             onClick={closePopup}
+            style={{ marginBottom: "10px", color: "#e53935" }}
           >
             Cancel
           </Button>
@@ -123,30 +124,51 @@ PostPopup.propTypes = {
 const styles = {
   popupContainer: {
     position: "relative",
-    backgroundColor: "#FFCCCC", 
+    backgroundColor: "#ffffff", 
     padding: "30px",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "40vw",
     maxWidth: "500px",
-    borderRadius: "10px",
-    border: "1px solid #FF9999", 
+    borderRadius: "12px", 
+    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)", 
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    border: "none", 
   },
   formContainer: {
     display: "flex",
     flexDirection: "column",
-    gap: "20px", 
-    marginBottom: "20px", 
+    gap: "16px", 
+    marginBottom: "20px",
     width: "100%",
   },
   textField: {
-    backgroundColor: "#fff", 
-    borderRadius: "5px", 
-    padding: "10px",
+    backgroundColor: "#f9f9f9", 
+    borderRadius: "8px", 
+    padding: "8px", 
+  },
+  buttonSubmit: {
+    marginBottom: "12px", 
+    fontWeight: "bold", 
+    backgroundColor: "#e53935", 
+    color: "#fff",
+    transition: "background-color 0.3s ease",
+  },
+  buttonSubmitHover: {
+    backgroundColor: "#0056b3", 
+  },
+  buttonCancel: {
+    fontWeight: "bold",
+    borderColor: "#e53935", 
+    color: "#e53935", 
+    transition: "background-color 0.3s ease, color 0.3s ease", 
+  },
+  buttonCancelHover: {
+    backgroundColor: "#f9f9f9", 
+    color: "#0056b3", 
   },
 };
 
