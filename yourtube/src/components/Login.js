@@ -39,12 +39,12 @@ const Login = ({ onLogin }) => {
 
   const handleLogin = () => {
     const { usr_name, password } = userDetails;
-  
+
     if (!usr_name || !password) {
       setLoginError('Please enter both username and password.');
       return;
     }
-  
+
     axios
       .post(`http://localhost:${PORT}/login`, { usr_name, password })
       .then((response) => {
@@ -162,11 +162,22 @@ const Login = ({ onLogin }) => {
             {isReturningUser ? (
               <>
                 <Box mt={3}>
-                  {loginError && 
-                    <Typography variant="h7" gutterBottom sx={{ fontWeight: 'bold', backgroundColor: 'red' }}>
+                  {loginError && (
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: 'bold',
+                        color: '#d32f2f',
+                        backgroundColor: '#ffe6e6',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        textAlign: 'center',
+                        marginBottom: 2,
+                      }}
+                    >
                       {loginError}
                     </Typography>
-                  }
+                  )}
                   <TextField
                     label="Username"
                     name="usr_name"
@@ -205,11 +216,22 @@ const Login = ({ onLogin }) => {
             ) : (
               <>
                 <Box mt={2}>
-                  {createError && 
-                    <Typography variant="h7" gutterBottom sx={{ fontWeight: 'bold', backgroundColor: 'red' }}>
+                  {createError && (
+                    <Typography
+                      variant="body1"
+                      sx={{
+                        fontWeight: 'bold',
+                        color: '#d32f2f',
+                        backgroundColor: '#ffe6e6',
+                        padding: '10px',
+                        borderRadius: '5px',
+                        textAlign: 'center',
+                        marginBottom: 2,
+                      }}
+                    >
                       {createError}
                     </Typography>
-                  }
+                  )}
                   <TextField
                     label="First Name"
                     name="f_name"

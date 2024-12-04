@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "reactjs-popup": "^2.0.6",
-    "reveal.js": "^5.1.0"
+    "reveal.js": "^5.1.0",
+    "scrollreveal": "^4.0.9"
   }
 }
