@@ -48,14 +48,16 @@ const Login = ({ onLogin }) => {
   };
 
   const handleNewUserSubmit = () => {
-    if (!newUserDetails.f_name || !newUserDetails.l_name) {
-      alert("Please provide both first and last name.");
+    if (!newUserDetails.usr_name || !newUserDetails.f_name || !newUserDetails.l_name || !newUserDetails.password) {
+      alert("Please provide the first name, last name, username and password.");
       return;
     }
 
     const payload = {
       f_name: newUserDetails.f_name.trim(),
       l_name: newUserDetails.l_name.trim(),
+      usr_name: newUserDetails.usr_name.trim(),
+      password: newUserDetails.password.trim(),
       is_admin: newUserDetails.is_admin ? "true" : "false",
     };
 
@@ -217,6 +219,22 @@ const Login = ({ onLogin }) => {
                     name="l_name"
                     fullWidth
                     value={newUserDetails.l_name}
+                    onChange={handleNewUserChange}
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Username"
+                    name="usr_name"
+                    fullWidth
+                    value={newUserDetails.usr_name}
+                    onChange={handleNewUserChange}
+                    sx={{ marginBottom: 2 }}
+                  />
+                  <TextField
+                    label="Password"
+                    name="password"
+                    fullWidth
+                    value={newUserDetails.password}
                     onChange={handleNewUserChange}
                     sx={{ marginBottom: 2 }}
                   />

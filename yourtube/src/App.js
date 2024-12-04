@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import Post from './components/Post.js';
 import Login from './components/Login.js';
 import Popup from './components/Popup.js';
@@ -19,7 +19,7 @@ export default function App() {
   });
   const [popup, setPopup] = useState(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getPosts();
     const savedUser = localStorage.getItem('LoggedInUser');
     if (savedUser) {
