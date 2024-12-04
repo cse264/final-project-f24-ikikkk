@@ -49,11 +49,10 @@ export default function App() {
   useEffect(() => {
     if (posts){
     const config = {
-        origin: "left", 
-        distance: "100px",
-        duration: 100, 
+        opacity: 0,
+        duration: 1000, 
         delay: 50,
-        interval: 200, 
+        interval: 500, 
         reset: false, 
     };
     sr.clean(".post");
