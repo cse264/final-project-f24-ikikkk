@@ -37,80 +37,26 @@ Team Members and Roles (Roles may change throughout the project):
 Stone Killen - Front-end
 Allen Lee - Backend/Admin
 Edwin Chang - Front-end
-Lisa Huang - Backend/Admin
+Lisa Huang - Front-end
 
 User roles: User and Admin accounts 
 Database: Trembo
-UI : Like, dislike, comment, add video post
-Library / framework: Google API Client library, scrollreveal.js 
+UI : Like, dislike, add comment, add video post
+Library / framework: scrollreveal.js, axios.js, mui, bcrypt 
 API: Youtube Data API
 
 Use Case: Users will upload youtube video links to share with other users. The idea is to easily share media with others in a more social media format. Rather than being shown videos that the youtube algorithm suggests that you will like. Share videos with friends in one place without cluttering group chats. Users will also be able to like / dislike users posted videos and comment on the posts as well to engage in conversations about the shared content as well as flag content or comments for review. 
 Admin Case: Users with admin privileges will be able to remove comments and posts to prevent harmful content as well as disable users accounts for repeated harassment. 
 
-### Plans for Now
-
-starting page will welcome the user and have a dropdown for the user to select the account they want to log in as (some will have the admin role for demoing purposes and will say it). 
-
-### Database info
-
-URI: postgresql://postgres:{$POSTGRES_PORT}@{$POSTGRES_DBNAME}:{$POSTGRES_PORT}/{$POSTGRES_USERNAME}
-
-tables:
+# How to run
+start the backend/database
 ```
-create table users (
-  u_id int not null,
-  f_name varchar(255),
-  l_name varchar(255),
-  is_admin boolean,
-  primary key (u_id)
-)
-
-create table posts (
-  p_id int not null,
-  u_id int,
-  title varchar(255),
-  body varchar(255),
-  likes int,
-  dislikes int,
-  primary key (p_id),
-)
-
-create table comments (
-  c_id int not null,
-  u_id int,
-  p_id int,
-  body varchar(255),
-  likes int,
-  dislikes int,
-  primary key (c_id),
-)
+  cd backend
+  npm start
 ```
 
-Default added values:
-users:
+  start frontend
 ```
-[{"u_id":1,"f_name":"Mustang","l_name":"John","is_admin":false},
-{"u_id":2,"f_name":"John","l_name":"Phillips","is_admin":true},
-{"u_id":3,"f_name":"Katusha","l_name":"Vasilischev","is_admin":true},
-{"u_id":4,"f_name":"Hal","l_name":"Gloster","is_admin":false},
-{"u_id":5,"f_name":"Henry","l_name":"Schumacher","is_admin":false}]
-```
-
-posts:
-```
-[{"p_id":1,"u_id":1,"title":"https://www.youtube.com/watch?v=jfKfPfyJRdk","body":"A classic","likes":20,"dislikes":2},
-{"p_id":2,"u_id":1,"title":"https://www.youtube.com/watch?v=TyUA1OmXMXA","body":"Learned a lot","likes":100,"dislikes":4},
-{"p_id":3,"u_id":4,"title":"https://www.youtube.com/watch?v=ZAqIoDhornk","body":"Physics!!!!","likes":1,"dislikes":0},
-{"p_id":4,"u_id":2,"title":"https://www.youtube.com/watch?v=vr5dCRHAgb0","body":"sooo relaxing","likes":20,"dislikes":2},
-{"p_id":5,"u_id":5,"title":"https://www.youtube.com/watch?v=xvFZjo5PgG0","body":"It is soooo good!!","likes":2,"dislikes":20},
-{"p_id":6,"u_id":5,"title":"https://www.youtube.com/watch?v=xvFZjo5PgG0","body":"It is soooo good!!!!!!","likes":2,"dislikes":100}]
-```
-
-comments:
-```
-[{"c_id":1,"u_id":2,"p_id":1,"body":"I AGREE!!!","likes":100,"dislikes":1},
-{"c_id":2,"u_id":5,"p_id":1,"body":"I Watch This Like Everyday!!!","likes":500,"dislikes":10},
-{"c_id":3,"u_id":1,"p_id":6,"body":"Please remove for spamming","likes":200,"dislikes":0},
-{"c_id":4,"u_id":1,"p_id":6,"body":"AHHHHHHH","likes":100,"dislikes":1}]
+  cd yourtube
+  npm start
 ```
