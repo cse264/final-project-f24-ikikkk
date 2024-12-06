@@ -3,6 +3,7 @@ require('dotenv').config();
 const pg = require('pg');
 const { Client } = pg;
 
+//basically taken from project 3
 const client = new Client({
   host: process.env.POSTGRES_HOST,
   port: Number(process.env.POSTGRES_PORT),
