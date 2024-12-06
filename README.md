@@ -52,6 +52,7 @@ Admin Case: Users with admin privileges will be able to remove comments and post
 start the backend/database
 ```
   cd backend
+  npm install express //first time running it
   npm start
 ```
 
