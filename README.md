@@ -62,4 +62,5 @@ start the backend/database
   npm install 
   Full List: npm install @emotion/react @emotion/styled @fortawesome/fontawesome-svg-core @fortawesome/free-solid-svg-icons @fortawesome/react-fontawesome @mui/icons-material @mui/material @testing-library/jest-dom @testing-library/react @testing-library/user-event axios bcrypt react react-dom react-icons react-scripts react-youtube reactjs-popup scrollreveal web-vitals
   npm start
+  
 ```
